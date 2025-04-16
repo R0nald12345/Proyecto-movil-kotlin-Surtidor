@@ -2,10 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- Include this permission to grab user's general location -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- Include only if your app benefits from precise location access. -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- Include this permission to grab user's general location -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Include only if your app benefits from precise location access. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -18,16 +16,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ParcialProyectoSurtidor"
         tools:targetApi="31">
-
         <activity
-            android:name=".firstapp.MainActivity"
+            android:name=".presentacion.CalcularProbabilidadAbastecimiento"
+            android:exported="false" />
+        <activity
+            android:name=".presentacion.ListadoSurtidores"
+            android:exported="false" />
+        <activity
+            android:name=".presentacion.AgregarSurtidorActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentacion.SurtidorSercanoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentacion.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
