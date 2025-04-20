@@ -4,15 +4,14 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class Conexion (context: Context): SQLiteOpenHelper(context,DATABASE_NAME, null, DATABASE_VERSION) {
+class Conexion(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         private const val DATABASE_NAME = "surtidor_db"
         private const val DATABASE_VERSION = 1
 
         //tablas
         private const val TABLA_SURTIDOR = "Surtidor"
-        private const val TABLA_USUARIO = "Usuario"
-        private const val TABLA_REGISTRO_ESPERA = "RegistroEspera"
+
 
         // Columnas comunes
         private const val COLUMNA_ID = "id"
@@ -22,21 +21,12 @@ class Conexion (context: Context): SQLiteOpenHelper(context,DATABASE_NAME, null,
         private const val COLUMNA_LATITUD = "latitud"
         private const val COLUMNA_LONGITUD = "longitud"
 
-        // Columnas Usuario
-        private const val COLUMNA_TELEFONO = "telefono"
-
-        // Columnas RegistroEspera
-        private const val COLUMNA_HORA_INICIO = "hora_inicio"
-        private const val COLUMNA_CANTIDAD_AUTO_ANTES = "cantidad_auto_antes"
-        private const val COLUMNA_TIEMPO_ESPERA_ESTIMADO = "tiempo_espera_estimado"
-        private const val COLUMNA_CANTIDAD_COMBUSTIBLE = "cantidad_combustible"
-        private const val COLUMNA_ID_USUARIO = "id_usuario"
-        private const val COLUMNA_ID_SURTIDOR = "id_surtidor"
-
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        // Crear tabla Surtidor
+
+
+        // Crear tabla Surtidor con referencia a Usuario
         val crearTablaSurtidor = """
             CREATE TABLE $TABLA_SURTIDOR (
                 $COLUMNA_ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -46,35 +36,13 @@ class Conexion (context: Context): SQLiteOpenHelper(context,DATABASE_NAME, null,
             )
         """.trimIndent()
 
-        // Crear tabla Usuario
-        val crearTablaUsuario = """
-            CREATE TABLE $TABLA_USUARIO (
-                $COLUMNA_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                $COLUMNA_NOMBRE TEXT NOT NULL,
-                $COLUMNA_TELEFONO TEXT NOT NULL,
-                $COLUMNA_LATITUD REAL NOT NULL,
-                $COLUMNA_LONGITUD REAL NOT NULL
-            )
-        """.trimIndent()
-
-        // Crear tabla RegistroEspera
-        val crearTablaRegistroEspera = """
-            CREATE TABLE $TABLA_REGISTRO_ESPERA (
-                $COLUMNA_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                $COLUMNA_HORA_INICIO TEXT NOT NULL,
-                $COLUMNA_CANTIDAD_AUTO_ANTES INTEGER NOT NULL,
-                $COLUMNA_TIEMPO_ESPERA_ESTIMADO INTEGER NOT NULL,
-                $COLUMNA_CANTIDAD_COMBUSTIBLE REAL NOT NULL,
-                $COLUMNA_ID_USUARIO INTEGER NOT NULL,
-                $COLUMNA_ID_SURTIDOR INTEGER NOT NULL,
-                FOREIGN KEY($COLUMNA_ID_USUARIO) REFERENCES $TABLA_USUARIO($COLUMNA_ID),
-                FOREIGN KEY($COLUMNA_ID_SURTIDOR) REFERENCES $TABLA_SURTIDOR($COLUMNA_ID)
-            )
-        """.trimIndent()
+        // Crear la tabla Surtidor
 
         db.execSQL(crearTablaSurtidor)
-        db.execSQL(crearTablaUsuario)
-        db.execSQL(crearTablaRegistroEspera)
+
+
+
+
 
         // Insertar datos de ejemplo (surtidores)
         val insertarSurtidor1 = """
@@ -102,6 +70,7 @@ class Conexion (context: Context): SQLiteOpenHelper(context,DATABASE_NAME, null,
              VALUES ('Virgen de Cotoca',-17.78229402285384, -63.16358839044966)
         """.trimIndent()
 
+        // Continúa con el resto de surtidores...
         val insertarSurtidor6 = """
              INSERT INTO $TABLA_SURTIDOR($COLUMNA_NOMBRE, $COLUMNA_LATITUD, $COLUMNA_LONGITUD)
              VALUES ('Biopetrol-Equipetrol',-17.754442257871663, -63.197113370180176)
@@ -114,7 +83,7 @@ class Conexion (context: Context): SQLiteOpenHelper(context,DATABASE_NAME, null,
 
         val insertarSurtidor8 = """
              INSERT INTO $TABLA_SURTIDOR($COLUMNA_NOMBRE, $COLUMNA_LATITUD, $COLUMNA_LONGITUD)
-             VALUES ('Biopetrol-Teca',-17.76408829671861,-63.071413028252856 )
+             VALUES ('Biopetrol-Teca',-17.76408829671861,-63.071413028252856)
         """.trimIndent()
 
         val insertarSurtidor9 = """
@@ -132,8 +101,6 @@ class Conexion (context: Context): SQLiteOpenHelper(context,DATABASE_NAME, null,
              VALUES ('Biopetrol-PiraiCamiri',-17.022670789240202, -63.53260202264754)
         """.trimIndent()
 
-        //----
-
         val insertarSurtidor12 = """
              INSERT INTO $TABLA_SURTIDOR($COLUMNA_NOMBRE, $COLUMNA_LATITUD, $COLUMNA_LONGITUD)
              VALUES ('Biopetrol-Pirai',-17.785829254773738, -63.20441190466365)
@@ -148,6 +115,7 @@ class Conexion (context: Context): SQLiteOpenHelper(context,DATABASE_NAME, null,
              INSERT INTO $TABLA_SURTIDOR($COLUMNA_NOMBRE, $COLUMNA_LATITUD, $COLUMNA_LONGITUD)
              VALUES ('Biopetrol-ES Sur',-17.799900227145187, -63.18048330366337)
         """.trimIndent()
+
         val insertarSurtidor15 = """
              INSERT INTO $TABLA_SURTIDOR($COLUMNA_NOMBRE, $COLUMNA_LATITUD, $COLUMNA_LONGITUD)
              VALUES ('Biopetrol-Viru Viru',-17.6759135053985, -63.15903123830914)
@@ -168,15 +136,12 @@ class Conexion (context: Context): SQLiteOpenHelper(context,DATABASE_NAME, null,
         db.execSQL(insertarSurtidor13)
         db.execSQL(insertarSurtidor14)
         db.execSQL(insertarSurtidor15)
-
-
-
     }
+
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        // Eliminar tablas si existen
-        db.execSQL("DROP TABLE IF EXISTS $TABLA_REGISTRO_ESPERA")
-        db.execSQL("DROP TABLE IF EXISTS $TABLA_USUARIO")
+        // Eliminar tablas si existen (primero Surtidor porque depende de Usuario)
         db.execSQL("DROP TABLE IF EXISTS $TABLA_SURTIDOR")
+
         // Crear de nuevo
         onCreate(db)
     }

@@ -8,10 +8,12 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
+//val es inmutable no cambia su valor
 class NSurtidor(private val context: Context) {
 
     // Instancia de la capa de acceso a datos (DAO)
     private val dSurtidor = DSurtidor(context)
+
 
     //Logica para crear nuevo Surtidor
     fun crear(surtidor: Surtidor):Boolean{

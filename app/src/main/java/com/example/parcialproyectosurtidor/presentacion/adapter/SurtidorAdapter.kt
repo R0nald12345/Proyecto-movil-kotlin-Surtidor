@@ -28,6 +28,7 @@ class SurtidorAdapter(
         return SurtidorViewHolder(view)
     }
 
+    // Método para actualizar la lista de surtidores
     override fun onBindViewHolder(holder: SurtidorViewHolder, position: Int) {
         val surtidor = surtidores[position]
 

@@ -86,6 +86,12 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.closeDrawers()
         }
 
+        findViewById<Button>(R.id.btn_surtidor_sercano).setOnClickListener {
+            val intent = Intent(this, SurtidorSercanoActivity::class.java)
+            startActivity(intent)
+            drawerLayout.closeDrawers()
+        }
+
         findViewById<Button>(R.id.btn_calcular_probabilidad).setOnClickListener {
             val intent = Intent(this, CalcularProbabilidadAbastecimiento::class.java)
             startActivity(intent)
@@ -104,6 +110,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //metodo que me indica para mi ubicacion actual
     private fun checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(
                 this,

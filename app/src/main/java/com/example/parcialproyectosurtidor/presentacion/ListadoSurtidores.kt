@@ -23,20 +23,20 @@ class ListadoSurtidores : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_listado_surtidores)
 
-        // Inicializar la capa de negocio
+        // Inicializo la capa de negocio
         nSurtidor = NSurtidor(this)
 
-        // Inicializar el DrawerLayout
+        // Inicializo el DrawerLayout
         drawerLayout = findViewById(R.id.drawer_layout)
 
-        // Configurar RecyclerView
+        // Configuro RecyclerView
         recyclerView = findViewById(R.id.rvSurtidores)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Cargar los datos
+        // Cargo los datos
         cargarSurtidores()
 
-        // Configurar botones del menú
+        // Configuro botones del menú
         findViewById<Button>(R.id.btn_inicio).setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -50,20 +50,18 @@ class ListadoSurtidores : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btn_surtidor_sercano).setOnClickListener {
-            // Si tienes implementada esta actividad
-            // val intent = Intent(this, SurtidorCercanoActivity::class.java)
-            // startActivity(intent)
+
             Toast.makeText(this, "Surtidor Cercano seleccionado", Toast.LENGTH_SHORT).show()
             drawerLayout.closeDrawers()
         }
 
         findViewById<Button>(R.id.btn_listado_surtidores).setOnClickListener {
-            // Ya estamos en esta actividad, solo cerramos el drawer
+
             drawerLayout.closeDrawers()
         }
 
         findViewById<Button>(R.id.btn_salir).setOnClickListener {
-            // Cierra todas las actividades y la aplicación
+            // Cierro todas las actividades y la aplicación
             finishAffinity()
         }
     }
@@ -75,11 +73,15 @@ class ListadoSurtidores : AppCompatActivity() {
             surtidores,
             // Listener para editar
             { surtidor ->
-                // Aquí puedes implementar la lógica para editar un surtidor
+                // Aquí puedo implementar la lógica para editar un surtidor
+                /*
+                -
+                -
+                */
                 Toast.makeText(this, "Editar: ${surtidor.nombre}", Toast.LENGTH_SHORT).show()
                 // TODO: Implementar la navegación a la actividad para editar
             },
-            // Listener para eliminar
+            //tengo el id y el nombre del surtidor Listener para eliminar
             { surtidor ->
                 mostrarDialogoConfirmacionEliminar(surtidor.id, surtidor.nombre)
             }
@@ -88,6 +90,7 @@ class ListadoSurtidores : AppCompatActivity() {
         recyclerView.adapter = adapter
     }
 
+    // Método para mostrar el diálogo de confirmación de eliminación
     private fun mostrarDialogoConfirmacionEliminar(idSurtidor: Int, nombreSurtidor: String) {
         AlertDialog.Builder(this)
             .setTitle("Confirmar eliminación")

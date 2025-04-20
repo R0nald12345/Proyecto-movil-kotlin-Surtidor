@@ -38,13 +38,13 @@ class CalcularProbabilidadAbastecimiento : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calcular_probabilidad_abastecimiento)
 
-        // Inicializar capa de negocio
+        // Inicializo capa de negocio
         nSurtidor = NSurtidor(this)
 
-        // Inicializar el cliente de ubicación de Google
+        // Inicializo el cliente de ubicación de Google
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // Inicializar vistas
+        // Inicializo vistas
         spinnerSurtidores = findViewById(R.id.spinnerSurtidores)
         btnUbicacionActual = findViewById(R.id.btnUbicacionActual)
         btnCalcular = findViewById(R.id.btnCalcular)
@@ -187,17 +187,17 @@ class CalcularProbabilidadAbastecimiento : AppCompatActivity() {
         // Tiempo promedio por auto (minutos)
         val tiempoPorAuto = 5.0
 
-        // Calcular distancia del usuario al surtidor
+        // Calculo distancia del usuario al surtidor
         val distanciaKm = calcularDistancia(
             userLocation!!.latitude, userLocation!!.longitude,
             selectedSurtidor!!.latitud, selectedSurtidor!!.longitud
         )
 
-        // Calcular si alcanzará el combustible
+        // Calculo si alcanzará el combustible
         val combustibleNecesario = (cantidadAutos + 1) * combustiblePorAuto
         val alcanzaCombustible = cantidadCombustible >= combustibleNecesario
 
-        // Calcular tiempo estimado de espera
+        // Calculo tiempo estimado de espera
         val tiempoEsperaMinutos = cantidadAutos * tiempoPorAuto
 
         // Mostrar resultados

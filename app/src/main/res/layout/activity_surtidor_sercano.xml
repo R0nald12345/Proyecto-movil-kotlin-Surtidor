@@ -7,4 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".presentacion.SurtidorSercanoActivity">
 
+    <TextView
+        android:id="@+id/txtResultado"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Surtidor más cercano aparecerá aquí"
+        android:textSize="18sp"
+        android:textColor="#000"
+        android:textAlignment="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
