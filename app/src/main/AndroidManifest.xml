@@ -26,7 +26,7 @@
             android:name=".presentacion.AgregarSurtidorActivity"
             android:exported="false" />
         <activity
-            android:name=".presentacion.SurtidorSercanoActivity"
+            android:name=".presentacion.SurtidorCercanoActivity"
             android:exported="false" />
         <activity
             android:name=".presentacion.MainActivity"

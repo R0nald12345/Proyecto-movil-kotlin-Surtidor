@@ -50,6 +50,8 @@ dependencies {
     // Añade esta dependencia para Google Play Services Location
     implementation("com.google.android.gms:play-services-location:21.1.0")
 
+
+
     // Puedes comentar estas dependencias de Mapbox Location si usas Google Location
     // implementation("com.mapbox.android:location:2.0.0")
     // implementation("com.mapbox.android:location-component:2.0.0")

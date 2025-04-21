@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btn_surtidor_sercano).setOnClickListener {
-            val intent = Intent(this, SurtidorSercanoActivity::class.java)
+            val intent = Intent(this, SurtidorCercanoActivity::class.java)
             startActivity(intent)
             drawerLayout.closeDrawers()
         }
