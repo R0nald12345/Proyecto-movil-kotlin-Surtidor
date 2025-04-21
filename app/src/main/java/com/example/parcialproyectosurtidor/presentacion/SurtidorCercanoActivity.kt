@@ -63,17 +63,13 @@ class SurtidorCercanoActivity : AppCompatActivity() {
             drawerLayout.closeDrawers()
         }
 
-        findViewById<Button>(R.id.btn_agregar_surtidor).setOnClickListener {
-            startActivity(Intent(this, AgregarSurtidorActivity::class.java))
-            drawerLayout.closeDrawers()
-        }
 
         findViewById<Button>(R.id.btn_surtidor_sercano).setOnClickListener {
             drawerLayout.closeDrawers()
         }
 
         findViewById<Button>(R.id.btn_listado_surtidores).setOnClickListener {
-            startActivity(Intent(this, ListadoSurtidores::class.java))
+            startActivity(Intent(this, GestionarSurtidores::class.java))
             drawerLayout.closeDrawers()
         }
 
@@ -87,19 +83,19 @@ class SurtidorCercanoActivity : AppCompatActivity() {
         }
 
         // ---------- CAMBIAR COLOR DEL BOTÓN ACTIVO ----------
-        val activeColor = ContextCompat.getColor(this, R.color.purple_500) // o tu color lila
+        val activeColor = ContextCompat.getColor(this, R.color.purple_500)
         val defaultColor = Color.TRANSPARENT
 
         val btnInicio = findViewById<Button>(R.id.btn_inicio)
-        val btnAgregar = findViewById<Button>(R.id.btn_agregar_surtidor)
+
         val btnSercano = findViewById<Button>(R.id.btn_surtidor_sercano)
         val btnListado = findViewById<Button>(R.id.btn_listado_surtidores)
         val btnProbabilidad = findViewById<Button>(R.id.btn_calcular_probabilidad)
 
         // Reiniciar todos los colores
         btnInicio.setBackgroundColor(defaultColor)
-        btnAgregar.setBackgroundColor(defaultColor)
-        btnSercano.setBackgroundColor(activeColor) // SOLO ESTE ACTIVO
+
+        btnSercano.setBackgroundColor(activeColor)
         btnListado.setBackgroundColor(defaultColor)
         btnProbabilidad.setBackgroundColor(defaultColor)
 
@@ -108,7 +104,7 @@ class SurtidorCercanoActivity : AppCompatActivity() {
         val black = ContextCompat.getColor(this, android.R.color.black)
 
         btnInicio.setTextColor(white)
-        btnAgregar.setTextColor(white)
+
         btnSercano.setTextColor(white)
         btnListado.setTextColor(white)
         btnProbabilidad.setTextColor(white)

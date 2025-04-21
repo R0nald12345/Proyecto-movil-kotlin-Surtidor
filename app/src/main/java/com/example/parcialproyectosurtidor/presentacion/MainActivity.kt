@@ -79,12 +79,6 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.closeDrawers()
         }
 
-        findViewById<Button>(R.id.btn_agregar_surtidor).setOnClickListener {
-            // Navegar a la actividad de agregar surtidor
-            val intent = Intent(this, AgregarSurtidorActivity::class.java)
-            startActivity(intent)
-            drawerLayout.closeDrawers()
-        }
 
         findViewById<Button>(R.id.btn_surtidor_sercano).setOnClickListener {
             val intent = Intent(this, SurtidorCercanoActivity::class.java)
@@ -100,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
 
         findViewById<Button>(R.id.btn_listado_surtidores).setOnClickListener {
-            val intent = Intent(this, ListadoSurtidores::class.java)
+            val intent = Intent(this, GestionarSurtidores::class.java)
             startActivity(intent)
             drawerLayout.closeDrawers()
         }

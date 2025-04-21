@@ -13,7 +13,7 @@ import com.example.parcialproyectosurtidor.presentacion.adapter.SurtidorAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class ListadoSurtidores : AppCompatActivity() {
+class GestionarSurtidores : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var nSurtidor: NSurtidor
@@ -21,7 +21,7 @@ class ListadoSurtidores : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_listado_surtidores)
+        setContentView(R.layout.activity_gestionar_surtidores)
 
         // Inicializo la capa de negocio
         nSurtidor = NSurtidor(this)
@@ -43,11 +43,12 @@ class ListadoSurtidores : AppCompatActivity() {
             drawerLayout.closeDrawers()
         }
 
-        findViewById<Button>(R.id.btn_agregar_surtidor).setOnClickListener {
-            val intent = Intent(this, AgregarSurtidorActivity::class.java)
+        findViewById<Button>(R.id.btn_agregar_en_mapa).setOnClickListener {
+            val intent = Intent(this, AgregarSurtidorEnMapaActivity::class.java)
             startActivity(intent)
-            drawerLayout.closeDrawers()
         }
+
+
 
         findViewById<Button>(R.id.btn_surtidor_sercano).setOnClickListener {
 
@@ -64,6 +65,13 @@ class ListadoSurtidores : AppCompatActivity() {
             // Cierro todas las actividades y la aplicación
             finishAffinity()
         }
+
+        findViewById<Button>(R.id.btn_ver_en_mapa).setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+
     }
 
     private fun cargarSurtidores() {
@@ -74,10 +82,11 @@ class ListadoSurtidores : AppCompatActivity() {
             // Listener para editar
             { surtidor ->
                 // Aquí puedo implementar la lógica para editar un surtidor
-                /*
-                -
-                -
-                */
+
+                    val intent = Intent(this, EditarSurtidorActivity::class.java)
+                    intent.putExtra("id", surtidor.id)
+                    startActivity(intent)
+
                 Toast.makeText(this, "Editar: ${surtidor.nombre}", Toast.LENGTH_SHORT).show()
                 // TODO: Implementar la navegación a la actividad para editar
             },

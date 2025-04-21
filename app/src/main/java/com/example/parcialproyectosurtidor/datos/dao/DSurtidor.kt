@@ -1,20 +1,17 @@
 package com.example.parcialproyectosurtidor.datos.dao
 
-import android.database.sqlite.SQLiteDatabase
-import com.example.parcialproyectosurtidor.datos.conexion.Conexion
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
+import com.example.parcialproyectosurtidor.datos.conexion.Conexion
 import com.example.parcialproyectosurtidor.datos.entidades.Surtidor
 
 class DSurtidor(private val context: Context) {
 
-    //Me creo una instancia de la clase Conexion que trabaja  mi BD
     private val conexion = Conexion(context)
-
     private var db: SQLiteDatabase? = null
 
-    // Métodos CRUD
     fun crear(surtidor: Surtidor): Boolean {
         try {
             db = conexion.writableDatabase
@@ -22,12 +19,10 @@ class DSurtidor(private val context: Context) {
                 put("nombre", surtidor.nombre)
                 put("latitud", surtidor.latitud)
                 put("longitud", surtidor.longitud)
-
+                put("cantidad_bombas", surtidor.cantidadBombas)
             }
 
             val id = db?.insert("surtidor", null, values)
-            db?.close()
-
             return id != -1L
         } catch (e: Exception) {
             e.printStackTrace()
@@ -37,7 +32,6 @@ class DSurtidor(private val context: Context) {
         }
     }
 
-
     fun editar(surtidor: Surtidor): Boolean {
         try {
             db = conexion.writableDatabase
@@ -45,7 +39,7 @@ class DSurtidor(private val context: Context) {
                 put("nombre", surtidor.nombre)
                 put("latitud", surtidor.latitud)
                 put("longitud", surtidor.longitud)
-
+                put("cantidad_bombas", surtidor.cantidadBombas)
             }
 
             val filasActualizadas = db?.update(
@@ -63,7 +57,6 @@ class DSurtidor(private val context: Context) {
             db?.close()
         }
     }
-
 
     fun eliminar(id: Int): Boolean {
         try {
@@ -95,7 +88,8 @@ class DSurtidor(private val context: Context) {
                         id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
                         nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
                         latitud = cursor.getDouble(cursor.getColumnIndexOrThrow("latitud")),
-                        longitud = cursor.getDouble(cursor.getColumnIndexOrThrow("longitud"))
+                        longitud = cursor.getDouble(cursor.getColumnIndexOrThrow("longitud")),
+                        cantidadBombas = cursor.getInt(cursor.getColumnIndexOrThrow("cantidad_bombas"))
                     )
                     lista.add(surtidor)
                 } while (cursor.moveToNext())
@@ -123,7 +117,8 @@ class DSurtidor(private val context: Context) {
                     id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
                     nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
                     latitud = cursor.getDouble(cursor.getColumnIndexOrThrow("latitud")),
-                    longitud = cursor.getDouble(cursor.getColumnIndexOrThrow("longitud"))
+                    longitud = cursor.getDouble(cursor.getColumnIndexOrThrow("longitud")),
+                    cantidadBombas = cursor.getInt(cursor.getColumnIndexOrThrow("cantidad_bombas"))
                 )
             }
             cursor.close()
@@ -136,33 +131,4 @@ class DSurtidor(private val context: Context) {
     }
 
 
-    // Método para obtener surtidores por usuario
-    fun getSurtidoresPorUsuario(idUsuario: Int): List<Surtidor> {
-        val lista = mutableListOf<Surtidor>()
-        try {
-            db = conexion.readableDatabase
-            val cursor: Cursor = db!!.rawQuery(
-                "SELECT * FROM Surtidor WHERE id_usuario = ?",
-                arrayOf(idUsuario.toString())
-            )
-
-            if (cursor.moveToFirst()) {
-                do {
-                    val surtidor = Surtidor(
-                        id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
-                        nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
-                        latitud = cursor.getDouble(cursor.getColumnIndexOrThrow("latitud")),
-                        longitud = cursor.getDouble(cursor.getColumnIndexOrThrow("longitud")),
-                    )
-                    lista.add(surtidor)
-                } while (cursor.moveToNext())
-            }
-            cursor.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            db?.close()
-        }
-        return lista
-    }
 }

@@ -8,39 +8,31 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-//val es inmutable no cambia su valor
 class NSurtidor(private val context: Context) {
 
-    // Instancia de la capa de acceso a datos (DAO)
     private val dSurtidor = DSurtidor(context)
 
-
-    //Logica para crear nuevo Surtidor
-    fun crear(surtidor: Surtidor):Boolean{
+    fun crear(surtidor: Surtidor): Boolean {
+        // Aquí surtidor ya contiene cantidadBombas
         return dSurtidor.crear(surtidor)
     }
 
-    //Logica para editar un surtidor existente
-    fun editar(surtidor: Surtidor):Boolean{
+    fun editar(surtidor: Surtidor): Boolean {
         return dSurtidor.editar(surtidor)
     }
 
-    //Logica para eliminar un Surtidor por ID
-    fun eliminar(id:Int):Boolean{
+    fun eliminar(id: Int): Boolean {
         return dSurtidor.eliminar(id)
     }
 
-    //Obtener todos los Surtidores de la Base de Datos
-    fun getSurtidores(): List<Surtidor>{
+    fun getSurtidores(): List<Surtidor> {
         return dSurtidor.getSurtidores()
     }
 
-    fun getSurtidorPorId(id:Int): Surtidor?{
+    fun getSurtidorPorId(id: Int): Surtidor? {
         return dSurtidor.getSurtidorPorId(id)
     }
 
-    //Me Retorna el surtidor mas sercado de acuerdo a las coordenadas del usuario
-    // Método de negocio específico: encontrar surtidor más cercano
     fun getSurtidorMasCercano(latitudUsuario: Double, longitudUsuario: Double): Surtidor? {
         val surtidores = dSurtidor.getSurtidores()
         if (surtidores.isEmpty()) return null
@@ -63,12 +55,11 @@ class NSurtidor(private val context: Context) {
         return surtidorMasCercano
     }
 
-    // Función auxiliar: fórmula haversine para calcular distancia entre coordenadas
     private fun calcularDistancia(
         lat1: Double, lon1: Double,
         lat2: Double, lon2: Double
     ): Double {
-        val radioTierra = 6371.0 // Radio de la Tierra en km
+        val radioTierra = 6371.0 // km
 
         val dLat = Math.toRadians(lat2 - lat1)
         val dLon = Math.toRadians(lon2 - lon1)
@@ -79,8 +70,6 @@ class NSurtidor(private val context: Context) {
 
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
-        return radioTierra * c // Distancia en km
+        return radioTierra * c
     }
-
-
 }

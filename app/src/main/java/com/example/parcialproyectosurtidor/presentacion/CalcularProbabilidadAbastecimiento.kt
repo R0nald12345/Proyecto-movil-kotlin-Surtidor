@@ -175,45 +175,41 @@ class CalcularProbabilidadAbastecimiento : AppCompatActivity() {
     }
 
     private fun calcularProbabilidad(cantidadCombustible: Double, cantidadAutos: Int) {
-        // Si no se ha seleccionado un surtidor o no hay ubicación del usuario
         if (selectedSurtidor == null || userLocation == null) {
             Toast.makeText(this, "Faltan datos para el cálculo", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Cantidad de combustible por auto (litros)
         val combustiblePorAuto = 45.0
-
-        // Tiempo promedio por auto (minutos)
         val tiempoPorAuto = 5.0
+        val cantidadBombas = selectedSurtidor!!.cantidadBombas
+        val autosSimultaneos = cantidadBombas * 2
 
-        // Calculo distancia del usuario al surtidor
         val distanciaKm = calcularDistancia(
             userLocation!!.latitude, userLocation!!.longitude,
             selectedSurtidor!!.latitud, selectedSurtidor!!.longitud
         )
 
-        // Calculo si alcanzará el combustible
         val combustibleNecesario = (cantidadAutos + 1) * combustiblePorAuto
         val alcanzaCombustible = cantidadCombustible >= combustibleNecesario
 
-        // Calculo tiempo estimado de espera
-        val tiempoEsperaMinutos = cantidadAutos * tiempoPorAuto
+        val tandas = ceil(cantidadAutos.toDouble() / autosSimultaneos)
+        val tiempoEsperaMinutos = tandas * tiempoPorAuto
 
-        // Mostrar resultados
         val mensaje = StringBuilder()
-        mensaje.append("Surtidor seleccionado: ${selectedSurtidor!!.nombre}\n\n")
+        mensaje.append("Surtidor seleccionado: ${selectedSurtidor!!.nombre}\n")
+        mensaje.append("Cantidad de bombas: $cantidadBombas (capacidad: $autosSimultaneos autos simultáneos)\n\n")
         mensaje.append("Distancia al surtidor: ${String.format("%.2f", distanciaKm)} km\n\n")
         mensaje.append("Tiempo estimado de espera: ${tiempoEsperaMinutos.toInt()} minutos\n\n")
 
         if (alcanzaCombustible) {
-            mensaje.append("PROBABILIDAD ALTA: El combustible disponible (${cantidadCombustible} L) es suficiente para todos los autos en espera y el suyo.")
+            mensaje.append("🔋 PROBABILIDAD ALTA: El combustible disponible (${cantidadCombustible} L) es suficiente para todos los autos en espera y el suyo.")
         } else {
             val autosQueAlcanzan = (cantidadCombustible / combustiblePorAuto).toInt()
             if (autosQueAlcanzan >= cantidadAutos) {
-                mensaje.append("PROBABILIDAD MEDIA: El combustible alcanzará para usted, pero quedará poco para los siguientes.")
+                mensaje.append("⚠️ PROBABILIDAD MEDIA: El combustible alcanzará para usted, pero quedará poco para los siguientes.")
             } else {
-                mensaje.append("PROBABILIDAD BAJA: El combustible probablemente NO alcance para su auto. Solo alcanza para aproximadamente $autosQueAlcanzan de los $cantidadAutos autos en espera.")
+                mensaje.append("❌ PROBABILIDAD BAJA: El combustible probablemente NO alcance para su auto. Solo alcanza para aproximadamente $autosQueAlcanzan de los $cantidadAutos autos en espera.")
             }
         }
 
@@ -223,6 +219,7 @@ class CalcularProbabilidadAbastecimiento : AppCompatActivity() {
             .setPositiveButton("Aceptar", null)
             .show()
     }
+
 
     private fun calcularDistancia(
         lat1: Double, lon1: Double,
