@@ -17,6 +17,9 @@
         android:theme="@style/Theme.ParcialProyectoSurtidor"
         tools:targetApi="31">
         <activity
+            android:name=".presentacion.TipoCombustible.GestionarTiposCombustibleActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentacion.EditarSurtidorActivity"
             android:exported="false" />
         <activity
@@ -29,13 +32,13 @@
             android:name=".presentacion.CalcularProbabilidadAbastecimiento"
             android:exported="false" />
         <activity
-            android:name=".presentacion.GestionarSurtidores"
+            android:name=".presentacion.Surtidor.GestionarSurtidores"
             android:exported="false" />
         <activity
             android:name=".presentacion.AgregarSurtidorActivity"
             android:exported="false" />
         <activity
-            android:name=".presentacion.SurtidorCercanoActivity"
+            android:name=".presentacion.Surtidor.SurtidorCercanoActivity"
             android:exported="false" />
         <activity
             android:name=".presentacion.MainActivity"

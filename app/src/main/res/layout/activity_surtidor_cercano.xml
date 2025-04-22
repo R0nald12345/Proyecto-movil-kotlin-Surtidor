@@ -6,7 +6,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentacion.SurtidorCercanoActivity">
+    tools:context=".presentacion.Surtidor.SurtidorCercanoActivity">
 
     <!-- Mapa + Texto de distancia -->
     <androidx.constraintlayout.widget.ConstraintLayout

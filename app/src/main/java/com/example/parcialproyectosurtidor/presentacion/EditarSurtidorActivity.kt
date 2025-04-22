@@ -42,6 +42,7 @@ class EditarSurtidorActivity : AppCompatActivity() {
         nSurtidor = NSurtidor(this)
         pointAnnotationManager = mapView.annotations.createPointAnnotationManager()
 
+        /*
         val id = intent.getIntExtra("id", -1)
         if (id != -1) {
             surtidor = nSurtidor.getSurtidorPorId(id)
@@ -56,8 +57,11 @@ class EditarSurtidorActivity : AppCompatActivity() {
         btnGuardar.setOnClickListener {
             guardarCambios()
         }
+
+         */
     }
 
+    /*
     private fun cargarDatosEnMapa(surtidor: Surtidor) {
         etNombre.setText(surtidor.nombre)
         etCantidadBombas.setText(surtidor.cantidadBombas.toString()) // mostrar bombas
@@ -72,6 +76,8 @@ class EditarSurtidorActivity : AppCompatActivity() {
 
         agregarOMoverMarcador(coordenadaSeleccionada!!)
     }
+    */
+
 
     private fun agregarOMoverMarcador(point: Point) {
         val icono = BitmapFactory.decodeResource(resources, R.drawable.red_marker)
@@ -89,6 +95,7 @@ class EditarSurtidorActivity : AppCompatActivity() {
         coordenadaSeleccionada = point
     }
 
+    /*
     private fun guardarCambios() {
         val nombre = etNombre.text.toString().trim()
         val bombasTexto = etCantidadBombas.text.toString().trim()
@@ -117,4 +124,6 @@ class EditarSurtidorActivity : AppCompatActivity() {
             Toast.makeText(this, "Error al actualizar", Toast.LENGTH_SHORT).show()
         }
     }
+
+     */
 }

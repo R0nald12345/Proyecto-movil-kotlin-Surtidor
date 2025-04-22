@@ -7,13 +7,11 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
-
 class NSurtidor(private val context: Context) {
 
     private val dSurtidor = DSurtidor(context)
 
     fun crear(surtidor: Surtidor): Boolean {
-        // Aquí surtidor ya contiene cantidadBombas
         return dSurtidor.crear(surtidor)
     }
 
@@ -25,14 +23,17 @@ class NSurtidor(private val context: Context) {
         return dSurtidor.eliminar(id)
     }
 
-    fun getSurtidores(): List<Surtidor> {
+    fun obtenerTodos(): List<Surtidor> {
         return dSurtidor.getSurtidores()
     }
 
-    fun getSurtidorPorId(id: Int): Surtidor? {
+    fun obtenerPorId(id: Int): Surtidor? {
         return dSurtidor.getSurtidorPorId(id)
     }
 
+    /**
+     * Retorna el surtidor más cercano a la ubicación del usuario
+     */
     fun getSurtidorMasCercano(latitudUsuario: Double, longitudUsuario: Double): Surtidor? {
         val surtidores = dSurtidor.getSurtidores()
         if (surtidores.isEmpty()) return null
@@ -55,21 +56,26 @@ class NSurtidor(private val context: Context) {
         return surtidorMasCercano
     }
 
+    /**
+     * Calcula la distancia entre dos coordenadas geográficas (Haversine)
+     */
     private fun calcularDistancia(
         lat1: Double, lon1: Double,
         lat2: Double, lon2: Double
     ): Double {
-        val radioTierra = 6371.0 // km
+        val radioTierra = 6371.0 // Radio de la Tierra en km
 
         val dLat = Math.toRadians(lat2 - lat1)
         val dLon = Math.toRadians(lon2 - lon1)
 
-        val a = sin(dLat / 2) * sin(dLat / 2) +
+        val a = sin(dLat / 2).pow(2.0) +
                 cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
-                sin(dLon / 2) * sin(dLon / 2)
+                sin(dLon / 2).pow(2.0)
 
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
         return radioTierra * c
     }
+
+    private fun Double.pow(exp: Double): Double = Math.pow(this, exp)
 }

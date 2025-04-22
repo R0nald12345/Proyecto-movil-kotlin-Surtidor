@@ -13,64 +13,60 @@ class DSurtidor(private val context: Context) {
     private var db: SQLiteDatabase? = null
 
     fun crear(surtidor: Surtidor): Boolean {
-        try {
+        return try {
             db = conexion.writableDatabase
             val values = ContentValues().apply {
                 put("nombre", surtidor.nombre)
                 put("latitud", surtidor.latitud)
                 put("longitud", surtidor.longitud)
-                put("cantidad_bombas", surtidor.cantidadBombas)
             }
 
-            val id = db?.insert("surtidor", null, values)
-            return id != -1L
+            val id = db?.insert("Surtidor", null, values)
+            id != -1L
         } catch (e: Exception) {
             e.printStackTrace()
-            return false
+            false
         } finally {
             db?.close()
         }
     }
 
     fun editar(surtidor: Surtidor): Boolean {
-        try {
+        return try {
             db = conexion.writableDatabase
             val values = ContentValues().apply {
                 put("nombre", surtidor.nombre)
                 put("latitud", surtidor.latitud)
                 put("longitud", surtidor.longitud)
-                put("cantidad_bombas", surtidor.cantidadBombas)
             }
 
             val filasActualizadas = db?.update(
-                "surtidor",
+                "Surtidor",
                 values,
                 "id = ?",
                 arrayOf(surtidor.id.toString())
             )
-
-            return filasActualizadas != null && filasActualizadas > 0
+            filasActualizadas != null && filasActualizadas > 0
         } catch (e: Exception) {
             e.printStackTrace()
-            return false
+            false
         } finally {
             db?.close()
         }
     }
 
     fun eliminar(id: Int): Boolean {
-        try {
+        return try {
             db = conexion.writableDatabase
             val filasEliminadas = db?.delete(
-                "surtidor",
+                "Surtidor",
                 "id = ?",
                 arrayOf(id.toString())
             )
-
-            return filasEliminadas != null && filasEliminadas > 0
+            filasEliminadas != null && filasEliminadas > 0
         } catch (e: Exception) {
             e.printStackTrace()
-            return false
+            false
         } finally {
             db?.close()
         }
@@ -88,8 +84,7 @@ class DSurtidor(private val context: Context) {
                         id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
                         nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
                         latitud = cursor.getDouble(cursor.getColumnIndexOrThrow("latitud")),
-                        longitud = cursor.getDouble(cursor.getColumnIndexOrThrow("longitud")),
-                        cantidadBombas = cursor.getInt(cursor.getColumnIndexOrThrow("cantidad_bombas"))
+                        longitud = cursor.getDouble(cursor.getColumnIndexOrThrow("longitud"))
                     )
                     lista.add(surtidor)
                 } while (cursor.moveToNext())
@@ -117,8 +112,7 @@ class DSurtidor(private val context: Context) {
                     id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
                     nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
                     latitud = cursor.getDouble(cursor.getColumnIndexOrThrow("latitud")),
-                    longitud = cursor.getDouble(cursor.getColumnIndexOrThrow("longitud")),
-                    cantidadBombas = cursor.getInt(cursor.getColumnIndexOrThrow("cantidad_bombas"))
+                    longitud = cursor.getDouble(cursor.getColumnIndexOrThrow("longitud"))
                 )
             }
             cursor.close()
@@ -129,6 +123,4 @@ class DSurtidor(private val context: Context) {
         }
         return surtidor
     }
-
-
 }

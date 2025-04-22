@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- RecyclerView para mostrar los tipos de combustible -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_tipos_combustible"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:orientation="vertical"/>
+
+
+    <!-- LinearLayout contenedor donde se agregarán los tipos de combustible -->
+    <LinearLayout
+        android:id="@+id/linear_layout_tipos_combustible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"/>
+
+    <!-- Botón para agregar un nuevo tipo de combustible -->
+    <Button
+        android:id="@+id/btn_agregar_tipo_combustible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="+ Agregar"
+        android:textColor="@android:color/white"
+        android:layout_margin="16dp"
+        android:background="@android:color/holo_green_dark"/>
+
+</LinearLayout>

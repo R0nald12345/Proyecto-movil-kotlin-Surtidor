@@ -1,7 +1,5 @@
 package com.example.parcialproyectosurtidor.presentacion
 
-
-
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -17,6 +15,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.parcialproyectosurtidor.R
 import com.example.parcialproyectosurtidor.negocio.NSurtidor
+import com.example.parcialproyectosurtidor.presentacion.Surtidor.GestionarSurtidores
+import com.example.parcialproyectosurtidor.presentacion.Surtidor.SurtidorCercanoActivity
+import com.example.parcialproyectosurtidor.presentacion.TipoCombustible.GestionarTiposCombustibleActivity
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
@@ -80,18 +81,18 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        findViewById<Button>(R.id.btn_tipos_combustibles).setOnClickListener {
+            val intent = Intent(this, GestionarTiposCombustibleActivity::class.java)
+            startActivity(intent)
+            drawerLayout.closeDrawers()
+        }
+
+        /*
         findViewById<Button>(R.id.btn_surtidor_sercano).setOnClickListener {
             val intent = Intent(this, SurtidorCercanoActivity::class.java)
             startActivity(intent)
             drawerLayout.closeDrawers()
         }
-
-        findViewById<Button>(R.id.btn_calcular_probabilidad).setOnClickListener {
-            val intent = Intent(this, CalcularProbabilidadAbastecimiento::class.java)
-            startActivity(intent)
-            drawerLayout.closeDrawers()
-        }
-
 
         findViewById<Button>(R.id.btn_listado_surtidores).setOnClickListener {
             val intent = Intent(this, GestionarSurtidores::class.java)
@@ -102,9 +103,11 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_salir).setOnClickListener {
             finish() // Cierra la aplicación
         }
+        */
+
     }
 
-    //metodo que me indica para mi ubicacion actual
+    // Verifica el permiso de ubicación
     private fun checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -123,6 +126,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Obtiene la última ubicación del usuario
     private fun getLastLocation() {
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -160,6 +164,7 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
+    // Muestra la ubicación del usuario en el mapa
     private fun showUserLocation(location: Location) {
         // Mover cámara a la ubicación del usuario
         mapView.mapboxMap.setCamera(
@@ -196,9 +201,10 @@ class MainActivity : AppCompatActivity() {
         userLocationMarker = pointAnnotationManager.create(pointAnnotationOptions)
     }
 
+    // Cargar marcadores de surtidores
     private fun cargarMarcadoresSurtidores() {
         // Obtener lista de surtidores desde la capa de negocio
-        val surtidores = nSurtidor.getSurtidores()
+        val surtidores = nSurtidor.obtenerTodos()
 
         // Limpiar marcadores existentes (excepto el de ubicación del usuario)
         val annotations = pointAnnotationManager.annotations

@@ -58,13 +58,13 @@ class AgregarSurtidorEnMapaActivity : AppCompatActivity() {
             annotationManager.create(marker)
             puntoSeleccionado = point
 
-            mostrarDialogoIngresoDatos(point)
+            //mostrarDialogoIngresoDatos(point)
             true
         }
     }
 
     // Muestra un diálogo con dos campos: nombre y cantidad de bombas
-    private fun mostrarDialogoIngresoDatos(punto: Point) {
+   /* private fun mostrarDialogoIngresoDatos(punto: Point) {
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
 
@@ -113,4 +113,6 @@ class AgregarSurtidorEnMapaActivity : AppCompatActivity() {
             .setNegativeButton("Cancelar", null)
             .show()
     }
+
+    */
 }

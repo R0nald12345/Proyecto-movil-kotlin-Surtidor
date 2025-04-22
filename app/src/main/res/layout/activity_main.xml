@@ -66,6 +66,17 @@
             android:textColor="@android:color/black"
             android:padding="12dp"/>
 
+        <Button
+            android:id="@+id/btn_tipos_combustibles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:background="@android:color/transparent"
+            android:text="Tipos Combustibles"
+            android:textAlignment="textStart"
+            android:textColor="@android:color/white"
+            android:padding="12dp"/>
+
 
         <Button
             android:id="@+id/btn_surtidor_sercano"
