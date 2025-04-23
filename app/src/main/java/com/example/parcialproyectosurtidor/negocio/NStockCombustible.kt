@@ -16,7 +16,22 @@ class NStockCombustible(context: Context) {
         return dao.getStockPorIdSurtidor(idSurtidor)
     }
 
-    fun eliminarPorSurtidor(idSurtidor: Int): Boolean {
+    fun eliminarPorIdSurtidor(idSurtidor: Int): Boolean {
         return dao.eliminarPorIdSurtidor(idSurtidor)
+    }
+
+    // Eliminar el stock asociado al surtidor y agregar nuevos registros
+    fun actualizarStock(idSurtidor: Int, stockList: List<StockCombustible>): Boolean {
+        // Eliminar stock previo
+        if (eliminarPorIdSurtidor(idSurtidor)) {
+            // Crear nuevo stock
+            for (stock in stockList) {
+                if (!crear(stock)) {
+                    return false // Si alguna inserción falla, revertir todo
+                }
+            }
+            return true
+        }
+        return false
     }
 }

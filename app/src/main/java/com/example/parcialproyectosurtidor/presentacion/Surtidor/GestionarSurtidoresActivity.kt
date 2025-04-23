@@ -107,34 +107,12 @@ class GestionarSurtidoresActivity : AppCompatActivity() {
 
     // Método para mostrar el diálogo de edición
     private fun mostrarDialogoEditar(surtidor: Surtidor) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Editar Surtidor")
-
-        val input = EditText(this)
-        input.setText(surtidor.nombre)
-        builder.setView(input)
-
-        builder.setPositiveButton("Guardar") { dialog, _ ->
-            val nombre = input.text.toString()
-            if (nombre.isNotEmpty()) {
-                surtidor.nombre = nombre
-                if (nSurtidor.editar(surtidor)) {
-                    Toast.makeText(this, "Surtidor actualizado", Toast.LENGTH_SHORT).show()
-                    cargarSurtidores() // Recargar la lista
-                    dialog.dismiss()
-                } else {
-                    Toast.makeText(this, "Error al actualizar", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                Toast.makeText(this, "El nombre no puede estar vacío", Toast.LENGTH_SHORT).show()
-            }
+        // Crear un Intent para redirigir a EditarSurtidorActivity
+        val intent = Intent(this, EditarSurtidorActivity::class.java).apply {
+            // Pasar el id del surtidor a la actividad EditarSurtidorActivity
+            putExtra("SURTIDOR_ID", surtidor.id)
         }
-
-        builder.setNegativeButton("Cancelar") { dialog, _ ->
-            dialog.dismiss()
-        }
-
-        builder.show()
+        startActivity(intent)
     }
 
     override fun onResume() {

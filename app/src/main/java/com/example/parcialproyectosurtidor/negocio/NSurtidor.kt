@@ -77,5 +77,9 @@ class NSurtidor(private val context: Context) {
         return radioTierra * c
     }
 
+    fun obtenerSurtidorPorId(id: Int): Surtidor? {
+        return dSurtidor.getSurtidorPorId(id)
+    }
+
     private fun Double.pow(exp: Double): Double = Math.pow(this, exp)
 }
