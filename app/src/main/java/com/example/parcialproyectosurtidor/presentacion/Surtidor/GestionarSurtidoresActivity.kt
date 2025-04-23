@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,11 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.parcialproyectosurtidor.R
 import com.example.parcialproyectosurtidor.negocio.NSurtidor
 import com.example.parcialproyectosurtidor.presentacion.AgregarSurtidorEnMapaActivity
-import com.example.parcialproyectosurtidor.presentacion.EditarSurtidorActivity
 import com.example.parcialproyectosurtidor.presentacion.MainActivity
-import com.example.parcialproyectosurtidor.presentacion.adapter.SurtidorAdapter
 
-class GestionarSurtidores : AppCompatActivity() {
+class GestionarSurtidoresActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var nSurtidor: NSurtidor

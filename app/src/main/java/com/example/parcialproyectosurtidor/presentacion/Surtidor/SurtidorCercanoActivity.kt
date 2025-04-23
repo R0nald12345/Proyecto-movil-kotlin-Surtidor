@@ -75,7 +75,7 @@ class SurtidorCercanoActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btn_listado_surtidores).setOnClickListener {
-            startActivity(Intent(this, GestionarSurtidores::class.java))
+            startActivity(Intent(this, GestionarSurtidoresActivity::class.java))
             drawerLayout.closeDrawers()
         }
 

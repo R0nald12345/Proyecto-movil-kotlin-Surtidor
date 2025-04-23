@@ -15,8 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.parcialproyectosurtidor.R
 import com.example.parcialproyectosurtidor.negocio.NSurtidor
-import com.example.parcialproyectosurtidor.presentacion.Surtidor.GestionarSurtidores
-import com.example.parcialproyectosurtidor.presentacion.Surtidor.SurtidorCercanoActivity
+import com.example.parcialproyectosurtidor.presentacion.Surtidor.GestionarSurtidoresActivity
 import com.example.parcialproyectosurtidor.presentacion.TipoCombustible.GestionarTiposCombustibleActivity
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -93,13 +92,15 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             drawerLayout.closeDrawers()
         }
+        */
 
         findViewById<Button>(R.id.btn_listado_surtidores).setOnClickListener {
-            val intent = Intent(this, GestionarSurtidores::class.java)
+            val intent = Intent(this, GestionarSurtidoresActivity::class.java)
             startActivity(intent)
             drawerLayout.closeDrawers()
         }
 
+        /*
         findViewById<Button>(R.id.btn_salir).setOnClickListener {
             finish() // Cierra la aplicación
         }

@@ -1,6 +1,7 @@
 package com.example.parcialproyectosurtidor.datos.conexion
 
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
@@ -15,16 +16,17 @@ class Conexion(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         private const val TABLA_STOCK = "StockCombustible"
     }
 
+    // Método que se ejecuta cuando se crea la base de datos
     override fun onCreate(db: SQLiteDatabase) {
         // Crear tabla Surtidor
-        db.execSQL("""
+        db.execSQL(""" 
             CREATE TABLE $TABLA_SURTIDOR (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nombre TEXT NOT NULL,
                 latitud REAL NOT NULL,
                 longitud REAL NOT NULL
             )
-        """.trimIndent())
+        """)
 
         // Crear tabla TipoCombustible
         db.execSQL("""
@@ -32,9 +34,9 @@ class Conexion(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nombre TEXT NOT NULL
             )
-        """.trimIndent())
+        """)
 
-        // Crear tabla StockCombustible (relación con bombas por tipo)
+        // Crear tabla StockCombustible
         db.execSQL("""
             CREATE TABLE $TABLA_STOCK (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -45,12 +47,11 @@ class Conexion(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                 FOREIGN KEY (id_surtidor) REFERENCES $TABLA_SURTIDOR(id),
                 FOREIGN KEY (id_tipo_combustible) REFERENCES $TABLA_COMBUSTIBLE(id)
             )
-        """.trimIndent())
+        """)
 
         // Insertar tipos de combustible
         db.execSQL("INSERT INTO $TABLA_COMBUSTIBLE (nombre) VALUES ('Gasolina Especial')")
         db.execSQL("INSERT INTO $TABLA_COMBUSTIBLE (nombre) VALUES ('Diésel')")
-        //db.execSQL("INSERT INTO $TABLA_COMBUSTIBLE (nombre) VALUES ('GNV')")
 
         // Insertar surtidores
         val surtidores = listOf(
@@ -75,21 +76,29 @@ class Conexion(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             db.execSQL("""
                 INSERT INTO $TABLA_SURTIDOR (nombre, latitud, longitud)
                 VALUES ('$nombre', $lat, $lon)
-            """.trimIndent())
+            """)
         }
 
-        // Insertar stock con bombas por tipo de combustible para algunos surtidores
-        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (1, 1, 500.0, 4)") // Gasolina Especial
+        // Insertar stock con bombas por tipo de combustible
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (1, 1, 500.0, 4)") // Gasolina
         db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (1, 2, 300.0, 3)") // Diésel
-        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (2, 1, 400.0, 4)") // Gasolina Especial
-        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (2, 3, 200.0, 2)") // GNV
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (2, 1, 400.0, 4)") // Gasolina
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (2, 1, 200.0, 2)") // Gasolina
         db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (3, 2, 350.0, 3)") // Diésel
     }
 
+    // Método que se ejecuta cuando la versión de la base de datos se actualiza
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLA_STOCK")
         db.execSQL("DROP TABLE IF EXISTS $TABLA_COMBUSTIBLE")
         db.execSQL("DROP TABLE IF EXISTS $TABLA_SURTIDOR")
         onCreate(db)
     }
+
+    // Método para obtener la conexión a la base de datos
+    fun getConnection(): SQLiteDatabase {
+        return this.writableDatabase
+    }
+
+
 }
