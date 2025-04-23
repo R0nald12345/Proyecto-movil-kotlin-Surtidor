@@ -2,22 +2,27 @@ package com.example.parcialproyectosurtidor.presentacion.Surtidor
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.cardview.widget.CardView
 import com.example.parcialproyectosurtidor.R
+import com.example.parcialproyectosurtidor.datos.entidades.Surtidor
 import com.example.parcialproyectosurtidor.negocio.NSurtidor
-import com.example.parcialproyectosurtidor.presentacion.AgregarSurtidorEnMapaActivity
-import com.example.parcialproyectosurtidor.presentacion.MainActivity
+import com.example.parcialproyectosurtidor.negocio.NStockCombustible
+import com.example.parcialproyectosurtidor.negocio.NTipoCombustible
 
 class GestionarSurtidoresActivity : AppCompatActivity() {
 
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var linearLayout: LinearLayout
     private lateinit var nSurtidor: NSurtidor
-    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var nStockCombustible: NStockCombustible
+    private lateinit var nTipoCombustible: NTipoCombustible
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,82 +30,75 @@ class GestionarSurtidoresActivity : AppCompatActivity() {
 
         // Inicializo la capa de negocio
         nSurtidor = NSurtidor(this)
+        nStockCombustible = NStockCombustible(this)
+        nTipoCombustible = NTipoCombustible(this)
 
-        // Inicializo el DrawerLayout
-        drawerLayout = findViewById(R.id.drawer_layout)
+        // Configuro el contenedor LinearLayout
+        linearLayout = findViewById(R.id.linear_layout_surtidores)
 
-        // Configuro RecyclerView
-        recyclerView = findViewById(R.id.rvSurtidores)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        // Cargo los datos de surtidores
+        cargarSurtidores()
 
-        // Cargo los datos
-        //cargarSurtidores()
-
-        // Configuro botones del menú
-        findViewById<Button>(R.id.btn_inicio).setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            drawerLayout.closeDrawers()
-        }
-
-        findViewById<Button>(R.id.btn_agregar_en_mapa).setOnClickListener {
-            val intent = Intent(this, AgregarSurtidorEnMapaActivity::class.java)
+        // Botón para agregar un surtidor
+        findViewById<Button>(R.id.btn_agregar_surtidor).setOnClickListener {
+            // Llamamos al Activity para agregar un nuevo surtidor
+            val intent = Intent(this, AgregarSurtidorActivity::class.java)
             startActivity(intent)
         }
-
-
-
-        findViewById<Button>(R.id.btn_surtidor_sercano).setOnClickListener {
-
-            Toast.makeText(this, "Surtidor Cercano seleccionado", Toast.LENGTH_SHORT).show()
-            drawerLayout.closeDrawers()
-        }
-
-        findViewById<Button>(R.id.btn_listado_surtidores).setOnClickListener {
-
-            drawerLayout.closeDrawers()
-        }
-
-        findViewById<Button>(R.id.btn_salir).setOnClickListener {
-            // Cierro todas las actividades y la aplicación
-            finishAffinity()
-        }
-
-        findViewById<Button>(R.id.btn_ver_en_mapa).setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
-
-
     }
 
-    /*
+    // Método para cargar los surtidores en el LinearLayout
     private fun cargarSurtidores() {
-        val surtidores = nSurtidor.getSurtidores()
+        val surtidores = nSurtidor.obtenerTodos()
+        linearLayout.removeAllViews() // Limpiar el LinearLayout
 
-        val adapter = SurtidorAdapter(
-            surtidores,
-            // Listener para editar
-            { surtidor ->
-                // Aquí puedo implementar la lógica para editar un surtidor
+        val inflater = LayoutInflater.from(this)
 
-                val intent = Intent(this, EditarSurtidorActivity::class.java)
-                intent.putExtra("id", surtidor.id)
-                startActivity(intent)
+        for (surtidor in surtidores) {
+            // Inflar la vista del item_surtidor para cada surtidor
+            val itemView = inflater.inflate(R.layout.item_surtidor, linearLayout, false)
 
-                Toast.makeText(this, "Editar: ${surtidor.nombre}", Toast.LENGTH_SHORT).show()
-                // TODO: Implementar la navegación a la actividad para editar
-            },
-            //tengo el id y el nombre del surtidor Listener para eliminar
-            { surtidor ->
+            // Configurar el nombre del surtidor
+            val tvNombreSurtidor = itemView.findViewById<TextView>(R.id.tvNombreSurtidor)
+            tvNombreSurtidor.text = surtidor.nombre
+
+            // Configurar los botones
+            val btnEditar = itemView.findViewById<Button>(R.id.btnEditar)
+            val btnVer = itemView.findViewById<Button>(R.id.btnVer)
+            val btnEliminar = itemView.findViewById<Button>(R.id.btnEliminar)
+
+            btnEditar.setOnClickListener {
+                mostrarDialogoEditar(surtidor)
+            }
+
+            btnVer.setOnClickListener {
+                // Aquí puedes mostrar detalles del surtidor, como el stock de combustible
+                mostrarDetallesSurtidor(surtidor)
+            }
+
+            btnEliminar.setOnClickListener {
                 mostrarDialogoConfirmacionEliminar(surtidor.id, surtidor.nombre)
             }
-        )
 
-        recyclerView.adapter = adapter
+            // Agregar la vista al contenedor
+            linearLayout.addView(itemView)
+        }
     }
 
+    // Método para mostrar detalles del surtidor (como el stock)
+    private fun mostrarDetallesSurtidor(surtidor: Surtidor) {
+        val stockCombustibles = nStockCombustible.obtenerPorSurtidor(surtidor.id)
+        val tiposCombustible = stockCombustibles.map { stock ->
+            val tipo = nTipoCombustible.obtenerPorId(stock.idTipoCombustible)
+            "${tipo?.nombre ?: "Desconocido"}: ${stock.cantidad} litros"
+        }
 
+        AlertDialog.Builder(this)
+            .setTitle("Detalles de ${surtidor.nombre}")
+            .setMessage("Stock de combustible:\n${tiposCombustible.joinToString("\n")}")
+            .setPositiveButton("Cerrar", null)
+            .show()
+    }
 
     // Método para mostrar el diálogo de confirmación de eliminación
     private fun mostrarDialogoConfirmacionEliminar(idSurtidor: Int, nombreSurtidor: String) {
@@ -108,11 +106,9 @@ class GestionarSurtidoresActivity : AppCompatActivity() {
             .setTitle("Confirmar eliminación")
             .setMessage("¿Estás seguro que deseas eliminar el surtidor '$nombreSurtidor'?")
             .setPositiveButton("Eliminar") { _, _ ->
-                // Eliminar el surtidor
                 if (nSurtidor.eliminar(idSurtidor)) {
                     Toast.makeText(this, "Surtidor eliminado correctamente", Toast.LENGTH_SHORT).show()
-                    // Recargar la lista
-                    cargarSurtidores()
+                    cargarSurtidores()  // Recargar la lista
                 } else {
                     Toast.makeText(this, "Error al eliminar el surtidor", Toast.LENGTH_SHORT).show()
                 }
@@ -121,11 +117,40 @@ class GestionarSurtidoresActivity : AppCompatActivity() {
             .show()
     }
 
-    override fun onResume() {
-        super.onResume()
-        // Recargar los datos cuando la actividad vuelve a primer plano
-        cargarSurtidores()
+    // Método para mostrar el diálogo de edición
+    private fun mostrarDialogoEditar(surtidor: Surtidor) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Editar Surtidor")
+
+        val input = EditText(this)
+        input.setText(surtidor.nombre)
+        builder.setView(input)
+
+        builder.setPositiveButton("Guardar") { dialog, _ ->
+            val nombre = input.text.toString()
+            if (nombre.isNotEmpty()) {
+                surtidor.nombre = nombre
+                if (nSurtidor.editar(surtidor)) {
+                    Toast.makeText(this, "Surtidor actualizado", Toast.LENGTH_SHORT).show()
+                    cargarSurtidores() // Recargar la lista
+                    dialog.dismiss()
+                } else {
+                    Toast.makeText(this, "Error al actualizar", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "El nombre no puede estar vacío", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        builder.setNegativeButton("Cancelar") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        builder.show()
     }
 
-     */
+    override fun onResume() {
+        super.onResume()
+        cargarSurtidores()  // Recargar los datos cuando la actividad vuelve a primer plano
+    }
 }

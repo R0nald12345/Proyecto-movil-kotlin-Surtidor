@@ -20,13 +20,13 @@
             android:name=".presentacion.TipoCombustible.GestionarTiposCombustibleActivity"
             android:exported="false" />
         <activity
-            android:name=".presentacion.EditarSurtidorActivity"
+            android:name=".presentacion.Surtidor.EditarSurtidorActivity"
             android:exported="false" />
         <activity
             android:name=".presentacion.VerSurtidorEnMapaActivity"
             android:exported="false" />
         <activity
-            android:name=".presentacion.AgregarSurtidorEnMapaActivity"
+            android:name=".presentacion.Surtidor.AgregarSurtidorActivity"
             android:exported="false" />
         <activity
             android:name=".presentacion.CalcularProbabilidadAbastecimiento"

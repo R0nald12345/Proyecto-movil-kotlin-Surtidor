@@ -81,10 +81,10 @@ class Conexion(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
         // Insertar stock con bombas por tipo de combustible
         db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (1, 1, 500.0, 4)") // Gasolina
-        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (1, 2, 300.0, 3)") // Diésel
-        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (2, 1, 400.0, 4)") // Gasolina
-        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (2, 1, 200.0, 2)") // Gasolina
-        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (3, 2, 350.0, 3)") // Diésel
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (2, 2, 300.0, 3)") // Diésel
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (3, 1, 400.0, 4)") // Gasolina
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (4, 1, 200.0, 2)") // Gasolina
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (5, 2, 350.0, 3)") // Diésel
     }
 
     // Método que se ejecuta cuando la versión de la base de datos se actualiza

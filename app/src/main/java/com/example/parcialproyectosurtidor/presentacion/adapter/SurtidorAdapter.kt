@@ -17,7 +17,7 @@ class SurtidorAdapter(
 
     class SurtidorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvNombreSurtidor: TextView = itemView.findViewById(R.id.tvNombreSurtidor)
-        val tvCoordenadas: TextView = itemView.findViewById(R.id.tvCoordenadas)
+        //val tvCoordenadas: TextView = itemView.findViewById(R.id.tvCoordenadas)
         val btnEditar: Button = itemView.findViewById(R.id.btnEditar)
         val btnEliminar: Button = itemView.findViewById(R.id.btnEliminar)
     }
@@ -33,7 +33,7 @@ class SurtidorAdapter(
         val surtidor = surtidores[position]
 
         holder.tvNombreSurtidor.text = surtidor.nombre
-        holder.tvCoordenadas.text = "Lat: ${surtidor.latitud}, Long: ${surtidor.longitud}"
+       // holder.tvCoordenadas.text = "Lat: ${surtidor.latitud}, Long: ${surtidor.longitud}"
 
         holder.btnEditar.setOnClickListener {
             editarListener(surtidor)
