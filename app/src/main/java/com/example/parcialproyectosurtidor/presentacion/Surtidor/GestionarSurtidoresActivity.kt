@@ -68,7 +68,7 @@ class GestionarSurtidoresActivity : AppCompatActivity() {
             val btnEliminar = itemView.findViewById<Button>(R.id.btnEliminar)
 
             btnEditar.setOnClickListener {
-                mostrarDialogoEditar(surtidor)
+                editar(surtidor)
             }
 
             btnVer.setOnClickListener {
@@ -106,7 +106,7 @@ class GestionarSurtidoresActivity : AppCompatActivity() {
     }
 
     // Método para mostrar el diálogo de edición
-    private fun mostrarDialogoEditar(surtidor: Surtidor) {
+    private fun editar(surtidor: Surtidor) {
         // Crear un Intent para redirigir a EditarSurtidorActivity
         val intent = Intent(this, EditarSurtidorActivity::class.java).apply {
             // Pasar el id del surtidor a la actividad EditarSurtidorActivity

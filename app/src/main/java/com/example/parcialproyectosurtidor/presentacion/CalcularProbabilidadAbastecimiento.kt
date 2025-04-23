@@ -63,7 +63,7 @@ class CalcularProbabilidadAbastecimiento : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-           // mostrarDialogDatosCalculos()
+            mostrarDialogDatosCalculos()
         }
 
         spinnerSurtidores.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -77,7 +77,7 @@ class CalcularProbabilidadAbastecimiento : AppCompatActivity() {
         }
     }
 
-    /*
+
     private fun cargarSurtidores() {
         // Obtener surtidores de la capa de negocio
         surtidoresLista = nSurtidor.getSurtidores()
@@ -92,7 +92,7 @@ class CalcularProbabilidadAbastecimiento : AppCompatActivity() {
     }
 
 
-     */
+
     private fun checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -152,7 +152,7 @@ class CalcularProbabilidadAbastecimiento : AppCompatActivity() {
             }
     }
 
-    /*
+
     private fun mostrarDialogDatosCalculos() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_calcular_probabilidad, null)
 
@@ -179,8 +179,8 @@ class CalcularProbabilidadAbastecimiento : AppCompatActivity() {
     }
 
 
-     */
-    /*
+
+
     private fun calcularProbabilidad(cantidadCombustible: Double, cantidadAutos: Int) {
         if (selectedSurtidor == null || userLocation == null) {
             Toast.makeText(this, "Faltan datos para el cálculo", Toast.LENGTH_SHORT).show()
@@ -227,7 +227,7 @@ class CalcularProbabilidadAbastecimiento : AppCompatActivity() {
             .show()
     }
 
-     */
+
 
 
     private fun calcularDistancia(

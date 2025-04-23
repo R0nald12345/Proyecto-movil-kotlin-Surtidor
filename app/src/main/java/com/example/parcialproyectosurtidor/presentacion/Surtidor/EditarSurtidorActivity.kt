@@ -60,7 +60,7 @@ class EditarSurtidorActivity : AppCompatActivity() {
         surtidorId = intent.getIntExtra("SURTIDOR_ID", -1)
 
         if (surtidorId != -1) {
-            surtidor = nSurtidor.obtenerSurtidorPorId(surtidorId!!)
+            surtidor = nSurtidor.obtenerPorId(surtidorId!!)
 
 
             surtidor?.let {

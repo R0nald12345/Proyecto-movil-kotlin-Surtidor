@@ -50,7 +50,7 @@ class Conexion(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         """)
 
         // Insertar tipos de combustible
-        db.execSQL("INSERT INTO $TABLA_COMBUSTIBLE (nombre) VALUES ('Gasolina Especial')")
+        db.execSQL("INSERT INTO $TABLA_COMBUSTIBLE (nombre) VALUES ('Gasolina')")
         db.execSQL("INSERT INTO $TABLA_COMBUSTIBLE (nombre) VALUES ('Diésel')")
 
         // Insertar surtidores
@@ -80,11 +80,25 @@ class Conexion(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         }
 
         // Insertar stock con bombas por tipo de combustible
-        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (1, 1, 500.0, 4)") // Gasolina
-        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (2, 2, 300.0, 3)") // Diésel
-        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (3, 1, 400.0, 4)") // Gasolina
-        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (4, 1, 200.0, 2)") // Gasolina
-        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (5, 2, 350.0, 3)") // Diésel
+        //1 Gasolina
+        //2 Disel
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (1, 2, 10000.0, 4)")
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (2, 2, 10000.0, 3)")
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (3, 1, 10000.0, 4)")
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (4, 1, 10000.0, 2)")
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (5, 1, 10000.0, 3)")
+
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (6, 1, 10000.0, 4)")
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (7, 1, 10000.0, 3)")
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (8, 1, 10000.0, 4)")
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (9, 1, 10000.0, 2)")
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (10, 1, 10000.0, 3)")
+
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (11, 1, 10000.0, 4)")
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (12, 1, 10000.0, 3)")
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (13, 1, 10000.0, 4)")
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (14, 1, 10000.0, 2)")
+        db.execSQL("INSERT INTO $TABLA_STOCK (id_surtidor, id_tipo_combustible, cantidad, nroBombas) VALUES (15, 1, 10000.0, 3)")
     }
 
     // Método que se ejecuta cuando la versión de la base de datos se actualiza
