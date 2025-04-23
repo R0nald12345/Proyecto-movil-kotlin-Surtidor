@@ -72,8 +72,11 @@ class GestionarSurtidoresActivity : AppCompatActivity() {
             }
 
             btnVer.setOnClickListener {
-                // Aquí puedes mostrar detalles del surtidor, como el stock de combustible
-                mostrarDetallesSurtidor(surtidor)
+                // Llamar a la nueva actividad para ver el surtidor en el mapa
+                val intent = Intent(this, VerSurtidorActivity::class.java).apply {
+                    putExtra("SURTIDOR_ID", surtidor.id)
+                }
+                startActivity(intent)
             }
 
             btnEliminar.setOnClickListener {
@@ -83,21 +86,6 @@ class GestionarSurtidoresActivity : AppCompatActivity() {
             // Agregar la vista al contenedor
             linearLayout.addView(itemView)
         }
-    }
-
-    // Método para mostrar detalles del surtidor (como el stock)
-    private fun mostrarDetallesSurtidor(surtidor: Surtidor) {
-        val stockCombustibles = nStockCombustible.obtenerPorSurtidor(surtidor.id)
-        val tiposCombustible = stockCombustibles.map { stock ->
-            val tipo = nTipoCombustible.obtenerPorId(stock.idTipoCombustible)
-            "${tipo?.nombre ?: "Desconocido"}: ${stock.cantidad} litros"
-        }
-
-        AlertDialog.Builder(this)
-            .setTitle("Detalles de ${surtidor.nombre}")
-            .setMessage("Stock de combustible:\n${tiposCombustible.joinToString("\n")}")
-            .setPositiveButton("Cerrar", null)
-            .show()
     }
 
     // Método para mostrar el diálogo de confirmación de eliminación

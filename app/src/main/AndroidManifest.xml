@@ -17,14 +17,15 @@
         android:theme="@style/Theme.ParcialProyectoSurtidor"
         tools:targetApi="31">
         <activity
+            android:name=".presentacion.Surtidor.VerSurtidorActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentacion.TipoCombustible.GestionarTiposCombustibleActivity"
             android:exported="false" />
         <activity
             android:name=".presentacion.Surtidor.EditarSurtidorActivity"
             android:exported="false" />
-        <activity
-            android:name=".presentacion.VerSurtidorEnMapaActivity"
-            android:exported="false" />
+
         <activity
             android:name=".presentacion.Surtidor.AgregarSurtidorActivity"
             android:exported="false" />
@@ -33,9 +34,6 @@
             android:exported="false" />
         <activity
             android:name=".presentacion.Surtidor.GestionarSurtidoresActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentacion.AgregarSurtidorActivity"
             android:exported="false" />
         <activity
             android:name=".presentacion.Surtidor.SurtidorCercanoActivity"

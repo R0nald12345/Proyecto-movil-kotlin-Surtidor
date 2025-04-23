@@ -1,14 +1,91 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".presentacion.Surtidor.AgregarSurtidorActivity">
 
+    <!-- Mapa -->
     <com.mapbox.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        mapbox:mapbox_cameraZoom="12" />
+        android:layout_height="0dp"
+        app:mapbox_cameraZoom="12"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cardInputs" />
+
+    <!-- CardView para los campos de entrada -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardInputs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="0dp"
+        app:cardElevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Nombre del Surtidor -->
+            <EditText
+                android:id="@+id/etNombreSurtidor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre del Surtidor"
+                android:inputType="text"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Spinner de tipos de combustible -->
+            <Spinner
+                android:id="@+id/spinnerTipoCombustible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Botones para añadir varios tipos de combustibles -->
+            <Button
+                android:id="@+id/btnAgregarCombustible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Agregar Combustible"
+                android:background="@android:color/holo_green_dark"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Layout donde se agregarán dinámicamente los tipos de combustible con el número de bombas -->
+            <LinearLayout
+                android:id="@+id/layoutTipoCombustible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+
+            <!-- Campo para la cantidad de bombas -->
+            <EditText
+                android:id="@+id/etCantidadBombas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Cantidad de Bombas"
+                android:inputType="number"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Botón de Guardar -->
+            <Button
+                android:id="@+id/btnGuardar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Guardar"
+                android:textColor="#FFFFFF"
+                android:background="@android:color/holo_green_dark"
+                android:layout_marginBottom="16dp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
