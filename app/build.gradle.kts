@@ -64,6 +64,9 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
 
+    implementation("com.mapbox.maps:android:11.11.0")
+
+
     // Dependencias existentes... Para la barra
     implementation("androidx.drawerlayout:drawerlayout:1.1.1")
     implementation("com.google.android.material:material:1.9.0")

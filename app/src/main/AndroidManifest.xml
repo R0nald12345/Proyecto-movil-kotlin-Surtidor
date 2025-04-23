@@ -30,7 +30,7 @@
             android:name=".presentacion.Surtidor.AgregarSurtidorActivity"
             android:exported="false" />
         <activity
-            android:name=".presentacion.CalcularProbabilidadAbastecimiento"
+            android:name=".presentacion.CalcularProbabilidadAbastecimientoActivity"
             android:exported="false" />
         <activity
             android:name=".presentacion.Surtidor.GestionarSurtidoresActivity"

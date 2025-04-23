@@ -101,11 +101,17 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.closeDrawers()
         }
 
-        /*
+        findViewById<Button>(R.id.btn_calcular_probabilidad).setOnClickListener {
+            val intent = Intent(this, CalcularProbabilidadAbastecimientoActivity::class.java)
+            startActivity(intent)
+            drawerLayout.closeDrawers()
+        }
+
+
         findViewById<Button>(R.id.btn_salir).setOnClickListener {
             finish() // Cierra la aplicación
         }
-        */
+
 
     }
 

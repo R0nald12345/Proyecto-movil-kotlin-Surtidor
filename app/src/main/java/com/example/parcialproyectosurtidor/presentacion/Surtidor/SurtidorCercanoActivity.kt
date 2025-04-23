@@ -17,7 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.parcialproyectosurtidor.R
 import com.example.parcialproyectosurtidor.negocio.NSurtidor
-import com.example.parcialproyectosurtidor.presentacion.CalcularProbabilidadAbastecimiento
+//import com.example.parcialproyectosurtidor.presentacion.CalcularProbabilidadAbastecimiento
 import com.example.parcialproyectosurtidor.presentacion.MainActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -79,10 +79,13 @@ class SurtidorCercanoActivity : AppCompatActivity() {
             drawerLayout.closeDrawers()
         }
 
+        /*
         findViewById<Button>(R.id.btn_calcular_probabilidad).setOnClickListener {
             startActivity(Intent(this, CalcularProbabilidadAbastecimiento::class.java))
             drawerLayout.closeDrawers()
         }
+        */
+
 
         findViewById<Button>(R.id.btn_salir).setOnClickListener {
             finishAffinity()

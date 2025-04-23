@@ -1,274 +1,194 @@
 package com.example.parcialproyectosurtidor.presentacion
 
-
-import androidx.activity.enableEdgeToEdge
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-
-import android.Manifest
-import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Location
 import android.os.Bundle
-import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.example.parcialproyectosurtidor.R
 import com.example.parcialproyectosurtidor.datos.entidades.Surtidor
+import com.example.parcialproyectosurtidor.negocio.NStockCombustible
 import com.example.parcialproyectosurtidor.negocio.NSurtidor
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.example.parcialproyectosurtidor.negocio.NTipoCombustible
+import com.mapbox.geojson.LineString
+import com.mapbox.geojson.Point
+import com.mapbox.maps.MapView
+import com.mapbox.maps.Style
+import com.mapbox.maps.plugin.annotation.annotations
+import com.mapbox.maps.plugin.annotation.generated.*
+import com.mapbox.maps.plugin.gestures.gestures
 import kotlin.math.ceil
 
-class CalcularProbabilidadAbastecimiento : AppCompatActivity() {
+class CalcularProbabilidadAbastecimientoActivity : AppCompatActivity() {
 
-    private lateinit var spinnerSurtidores: Spinner
-    private lateinit var btnUbicacionActual: Button
+    private lateinit var mapView: MapView
+    private lateinit var spinnerTipo: Spinner
     private lateinit var btnCalcular: Button
+    private lateinit var txtDistancia: TextView
+
     private lateinit var nSurtidor: NSurtidor
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var surtidoresLista: List<Surtidor> = listOf()
-    private var selectedSurtidor: Surtidor? = null
-    private var userLocation: Location? = null
-    private val LOCATION_PERMISSION_REQUEST_CODE = 1234
+    private lateinit var nTipo: NTipoCombustible
+    private lateinit var nStock: NStockCombustible
+
+    private lateinit var lineAnnotationManager: PolylineAnnotationManager
+    private lateinit var pointAnnotationManager: PointAnnotationManager
+    private var drawnPoints = mutableListOf<Point>()
+    private var surtidorSeleccionado: Surtidor? = null
+    private var tiposCombustible = listOf<com.example.parcialproyectosurtidor.datos.entidades.TipoCombustible>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calcular_probabilidad_abastecimiento)
 
-        // Inicializo capa de negocio
-        nSurtidor = NSurtidor(this)
-
-        // Inicializo el cliente de ubicación de Google
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        // Inicializo vistas
-        spinnerSurtidores = findViewById(R.id.spinnerSurtidores)
-        btnUbicacionActual = findViewById(R.id.btnUbicacionActual)
+        mapView = findViewById(R.id.mapView)
+        spinnerTipo = findViewById(R.id.spinnerTipoCombustible)
         btnCalcular = findViewById(R.id.btnCalcular)
+        txtDistancia = findViewById(R.id.txtDistancia)
 
-        // Cargar lista de surtidores
-        //cargarSurtidores()
+        nSurtidor = NSurtidor(this)
+        nTipo = NTipoCombustible(this)
+        nStock = NStockCombustible(this)
 
-        // Configurar listeners
-        btnUbicacionActual.setOnClickListener {
-            checkLocationPermission()
-        }
+        mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS) {
+            val annotationApi = mapView.annotations
+            lineAnnotationManager = annotationApi.createPolylineAnnotationManager()
+            pointAnnotationManager = annotationApi.createPointAnnotationManager()
 
-        btnCalcular.setOnClickListener {
-            if (selectedSurtidor == null) {
-                Toast.makeText(this, "Por favor seleccione un surtidor", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+            cargarMarcadoresSurtidores()
 
-            mostrarDialogDatosCalculos()
-        }
-
-        spinnerSurtidores.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                selectedSurtidor = surtidoresLista[position]
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                selectedSurtidor = null
-            }
-        }
-    }
-
-
-    private fun cargarSurtidores() {
-        // Obtener surtidores de la capa de negocio
-        surtidoresLista = nSurtidor.getSurtidores()
-
-        // Crear adaptador para el spinner
-        val surtidoresNombres = surtidoresLista.map { it.nombre }.toTypedArray()
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, surtidoresNombres)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        // Asignar adaptador al spinner
-        spinnerSurtidores.adapter = adapter
-    }
-
-
-
-    private fun checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // Permiso no concedido, solicitarlo
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE
-            )
-        } else {
-            // Permiso ya concedido, obtener ubicación
-            getLastLocation()
-        }
-    }
-
-    private fun getLastLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-                location?.let {
-                    // Guardar la ubicación actual
-                    userLocation = it
-                    Toast.makeText(
-                        this,
-                        "Ubicación actual obtenida: ${it.latitude}, ${it.longitude}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    btnUbicacionActual.text = "Ubicación actual disponible"
-                    btnUbicacionActual.isEnabled = false
-                } ?: run {
-                    Toast.makeText(
-                        this,
-                        "No se pudo obtener la ubicación. Asegúrate de tener el GPS activado.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+            mapView.gestures.addOnMapClickListener { point ->
+                if (surtidorSeleccionado != null) {
+                    drawnPoints.clear()
+                    drawnPoints.add(Point.fromLngLat(surtidorSeleccionado!!.longitud, surtidorSeleccionado!!.latitud))
+                    drawnPoints.add(point)
+                    drawLine()
+                } else {
+                    Toast.makeText(this, "Primero selecciona un surtidor", Toast.LENGTH_SHORT).show()
                 }
+                true
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(
-                    this,
-                    "Error al obtener ubicación: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-    }
-
-
-    private fun mostrarDialogDatosCalculos() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_calcular_probabilidad, null)
-
-        val etCantidadCombustible = dialogView.findViewById<EditText>(R.id.etCantidadCombustible)
-        val etCantidadAutos = dialogView.findViewById<EditText>(R.id.etCantidadAutos)
-
-        val dialog = AlertDialog.Builder(this)
-            .setTitle("Datos adicionales")
-            .setView(dialogView)
-            .setPositiveButton("Calcular") { _, _ ->
-                try {
-                    val cantidadCombustible = etCantidadCombustible.text.toString().toDouble()
-                    val cantidadAutos = etCantidadAutos.text.toString().toInt()
-
-                    calcularProbabilidad(cantidadCombustible, cantidadAutos)
-                } catch (e: Exception) {
-                    Toast.makeText(this, "Por favor ingrese valores válidos", Toast.LENGTH_SHORT).show()
-                }
-            }
-            .setNegativeButton("Cancelar", null)
-            .create()
-
-        dialog.show()
-    }
-
-
-
-
-    private fun calcularProbabilidad(cantidadCombustible: Double, cantidadAutos: Int) {
-        if (selectedSurtidor == null || userLocation == null) {
-            Toast.makeText(this, "Faltan datos para el cálculo", Toast.LENGTH_SHORT).show()
-            return
         }
 
-        val combustiblePorAuto = 45.0
-        val tiempoPorAuto = 5.0
-        val cantidadBombas = selectedSurtidor!!.cantidadBombas
-        val autosSimultaneos = cantidadBombas * 2
+        cargarTiposCombustible()
+        btnCalcular.setOnClickListener { realizarCalculo() }
+    }
 
-        val distanciaKm = calcularDistancia(
-            userLocation!!.latitude, userLocation!!.longitude,
-            selectedSurtidor!!.latitud, selectedSurtidor!!.longitud
+    private fun cargarTiposCombustible() {
+        tiposCombustible = nTipo.obtenerTodos()
+        val nombres = tiposCombustible.map { it.nombre }
+        spinnerTipo.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, nombres)
+    }
+
+    private fun cargarMarcadoresSurtidores() {
+        pointAnnotationManager.deleteAll()
+        val surtidores = nSurtidor.obtenerTodos()
+        val resizedBitmap = Bitmap.createScaledBitmap(
+            BitmapFactory.decodeResource(resources, R.drawable.red_marker), 80, 80, true
         )
 
-        val combustibleNecesario = (cantidadAutos + 1) * combustiblePorAuto
-        val alcanzaCombustible = cantidadCombustible >= combustibleNecesario
+        val mapaSurtidores = mutableMapOf<String, Surtidor>()
 
-        val tandas = ceil(cantidadAutos.toDouble() / autosSimultaneos)
-        val tiempoEsperaMinutos = tandas * tiempoPorAuto
+        for (surtidor in surtidores) {
+            val annotationOptions = PointAnnotationOptions()
+                .withPoint(Point.fromLngLat(surtidor.longitud, surtidor.latitud))
+                .withIconImage(resizedBitmap)
+                .withTextField(surtidor.nombre)
+
+            val annotation = pointAnnotationManager.create(annotationOptions)
+
+            // Guardamos el texto (nombre) como clave para luego identificar el surtidor seleccionado
+            mapaSurtidores[surtidor.nombre] = surtidor
+        }
+
+        // Listener global para todos los marcadores
+        pointAnnotationManager.addClickListener { clickedAnnotation ->
+            val nombre = clickedAnnotation.textField ?: return@addClickListener false
+            val surtidor = mapaSurtidores[nombre]
+            if (surtidor != null) {
+                surtidorSeleccionado = surtidor
+                Toast.makeText(this, "Surtidor seleccionado: ${surtidor.nombre}", Toast.LENGTH_SHORT).show()
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    private fun calcularDistancia(puntos: List<Point>): Double {
+        if (puntos.size < 2) return 0.0
+        var distanciaTotal = 0.0
+        for (i in 0 until puntos.size - 1) {
+            val resultados = FloatArray(1)
+            Location.distanceBetween(
+                puntos[i].latitude(), puntos[i].longitude(),
+                puntos[i + 1].latitude(), puntos[i + 1].longitude(),
+                resultados
+            )
+            distanciaTotal += resultados[0]
+        }
+        return distanciaTotal
+    }
+
+    private fun drawLine() {
+        lineAnnotationManager.deleteAll()
+        if (drawnPoints.size >= 2) {
+            lineAnnotationManager.create(
+                PolylineAnnotationOptions()
+                    .withPoints(drawnPoints)
+                    .withLineColor("#FF0000")
+                    .withLineWidth(5.0)
+            )
+            val distancia = calcularDistancia(drawnPoints)
+            txtDistancia.text = "Total ${distancia.toInt()} mts"
+        }
+    }
+
+    private fun realizarCalculo() {
+        if (drawnPoints.size < 2 || surtidorSeleccionado == null) {
+            Toast.makeText(this, "Dibuja la distancia desde un surtidor seleccionado", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val distancia = calcularDistancia(drawnPoints)
+        val cantidadAutos = (distancia / 5.0).toInt()
+
+        val tipoSeleccionado = tiposCombustible[spinnerTipo.selectedItemPosition]
+
+        val stock = nStock.obtenerPorSurtidor(surtidorSeleccionado!!.id)
+            .firstOrNull { it.idTipoCombustible == tipoSeleccionado.id }
+
+        if (stock == null) {
+            mostrarResultado("Este surtidor no tiene ${tipoSeleccionado.nombre}")
+            return
+        }
+
+        val litrosDisponibles = stock.cantidad
+        val bombas = stock.nroBombas
+        val litrosPorAuto = 45.0
+        val tiempoPorAuto = 6.0
+        val autosPorTurno = bombas * 2
+        val litrosNecesarios = cantidadAutos * litrosPorAuto
+        val alcanza = litrosDisponibles >= litrosNecesarios
+        val tandas = ceil(cantidadAutos / autosPorTurno.toDouble())
+        val tiempoEspera = (tandas * tiempoPorAuto).toInt()
 
         val mensaje = StringBuilder()
-        mensaje.append("Surtidor seleccionado: ${selectedSurtidor!!.nombre}\n")
-        mensaje.append("Cantidad de bombas: $cantidadBombas (capacidad: $autosSimultaneos autos simultáneos)\n\n")
-        mensaje.append("Distancia al surtidor: ${String.format("%.2f", distanciaKm)} km\n\n")
-        mensaje.append("Tiempo estimado de espera: ${tiempoEsperaMinutos.toInt()} minutos\n\n")
+        mensaje.append("Tiempo de Espera: ${tiempoEspera / 60}h ${tiempoEspera % 60}min\n\n")
+        mensaje.append(if (alcanza)
+            "✅ Las probabilidades son altas: puedes cargar tu combustible"
+        else
+            "❌ Las probabilidades son bajas: el combustible probablemente no alcance")
 
-        if (alcanzaCombustible) {
-            mensaje.append("🔋 PROBABILIDAD ALTA: El combustible disponible (${cantidadCombustible} L) es suficiente para todos los autos en espera y el suyo.")
-        } else {
-            val autosQueAlcanzan = (cantidadCombustible / combustiblePorAuto).toInt()
-            if (autosQueAlcanzan >= cantidadAutos) {
-                mensaje.append("⚠️ PROBABILIDAD MEDIA: El combustible alcanzará para usted, pero quedará poco para los siguientes.")
-            } else {
-                mensaje.append("❌ PROBABILIDAD BAJA: El combustible probablemente NO alcance para su auto. Solo alcanza para aproximadamente $autosQueAlcanzan de los $cantidadAutos autos en espera.")
-            }
-        }
+        mostrarResultado(mensaje.toString())
+    }
 
+    private fun mostrarResultado(mensaje: String) {
         AlertDialog.Builder(this)
             .setTitle("Resultado del cálculo")
-            .setMessage(mensaje.toString())
+            .setMessage(mensaje)
             .setPositiveButton("Aceptar", null)
             .show()
-    }
-
-
-
-
-    private fun calcularDistancia(
-        lat1: Double, lon1: Double,
-        lat2: Double, lon2: Double
-    ): Double {
-        val radioTierra = 6371.0 // Radio de la Tierra en km
-
-        val dLat = Math.toRadians(lat2 - lat1)
-        val dLon = Math.toRadians(lon2 - lon1)
-
-        val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2)
-
-        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-
-        return radioTierra * c // Distancia en km
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            LOCATION_PERMISSION_REQUEST_CODE -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    // Permiso concedido
-                    getLastLocation()
-                } else {
-                    // Permiso denegado
-                    Toast.makeText(
-                        this,
-                        "No se concedieron los permisos de ubicación",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                return
-            }
-        }
     }
 }
