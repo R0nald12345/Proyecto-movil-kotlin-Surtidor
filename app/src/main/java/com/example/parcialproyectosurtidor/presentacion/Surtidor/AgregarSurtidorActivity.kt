@@ -1,21 +1,18 @@
-package com.example.parcialproyectosurtidor.presentacion
+package com.example.parcialproyectosurtidor.presentacion.Surtidor
 
-import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.parcialproyectosurtidor.R
-import com.example.parcialproyectosurtidor.datos.entidades.Surtidor
 import com.example.parcialproyectosurtidor.negocio.NSurtidor
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
 import com.mapbox.maps.plugin.annotation.annotations
-import com.mapbox.maps.plugin.annotation.generated.*
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
+import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.gestures.gestures
 
 class AgregarSurtidorEnMapaActivity : AppCompatActivity() {
