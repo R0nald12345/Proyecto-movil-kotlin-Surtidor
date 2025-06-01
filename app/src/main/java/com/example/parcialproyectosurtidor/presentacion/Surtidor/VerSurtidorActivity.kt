@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+//import androidx.compose.ui.semantics.text
 import com.example.parcialproyectosurtidor.R
 import com.example.parcialproyectosurtidor.datos.entidades.Surtidor
 import com.example.parcialproyectosurtidor.negocio.NSurtidor
@@ -115,9 +116,15 @@ class VerSurtidorActivity : AppCompatActivity() {
             val itemView = layoutInflater.inflate(R.layout.item_ver_surtidor_tipo_combustible, null)
             val tvTipoCombustible = itemView.findViewById<TextView>(R.id.tvTipoCombustible)
             val tvCantidadBombas = itemView.findViewById<TextView>(R.id.tvCantidadBombas)
+            // Obtener referencia al TextView para la cantidad de litros
+            val tvCantidadLitrosVer = itemView.findViewById<TextView>(R.id.tvCantidadLitrosVer)
 
             tvTipoCombustible.text = tipoCombustible?.nombre ?: "Desconocido"
             tvCantidadBombas.text = "Cantidad de Bombas: ${stock.nroBombas}"
+
+            // Mostrar la cantidad de litros del stock
+            tvCantidadLitrosVer.text = "Cantidad de Litros: ${stock.cantidad}" // Asigna el valor de stock.cantidad
+
 
             layoutCombustible.addView(itemView)
         }

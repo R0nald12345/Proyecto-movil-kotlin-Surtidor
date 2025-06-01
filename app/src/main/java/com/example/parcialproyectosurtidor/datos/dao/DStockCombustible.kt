@@ -67,4 +67,43 @@ class DStockCombustible (private val context: Context) {
             db?.close()
         }
     }
+
+    //  método para eliminar un stock por su ID
+    fun eliminar(idStock: Int): Boolean {
+        return try {
+            db = conexion.writableDatabase
+            val filas = db?.delete("StockCombustible", "id = ?", arrayOf(idStock.toString()))
+            filas != null && filas > 0
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        } finally {
+            db?.close()
+        }
+    }
+
+    //  método para editar un stock existente
+    fun editar(stock: StockCombustible): Boolean {
+        return try {
+            db = conexion.writableDatabase
+            val values = ContentValues().apply {
+                put("id_surtidor", stock.idSurtidor) // Aunque no cambie, es buena práctica incluirlo
+                put("id_tipo_combustible", stock.idTipoCombustible) // Aunque no cambie
+                put("cantidad", stock.cantidad)
+                put("nroBombas", stock.nroBombas)
+            }
+            val filasActualizadas = db?.update(
+                "StockCombustible",
+                values,
+                "id = ?", // Condición de actualización por ID
+                arrayOf(stock.id.toString())
+            )
+            filasActualizadas != null && filasActualizadas > 0
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        } finally {
+            db?.close()
+        }
+    }
 }

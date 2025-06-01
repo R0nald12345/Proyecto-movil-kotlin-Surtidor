@@ -50,16 +50,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp" />
 
-            <!-- Botones para añadir varios tipos de combustibles -->
-            <Button
-                android:id="@+id/btnAgregarCombustible"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Agregar Combustible"
-                android:background="@android:color/holo_green_dark"
-                android:textColor="#FFFFFF"
-                android:layout_marginBottom="8dp"/>
-
             <!-- Layout donde se agregarán dinámicamente los tipos de combustible con el número de bombas -->
             <LinearLayout
                 android:id="@+id/layoutTipoCombustible"
@@ -67,24 +57,51 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"/>
 
-            <!-- Campo para la cantidad de bombas -->
-            <EditText
-                android:id="@+id/etCantidadBombas"
+            <!-- Fila para Nro de Bombas y Litros de Combustible -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Cantidad de Bombas"
-                android:inputType="number"
-                android:layout_marginBottom="16dp" />
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <!-- Campo Nro de Bombas -->
+                <EditText
+                    android:id="@+id/etCantidadBombas"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Nro de Bombas"
+                    android:inputType="number"
+                    android:layout_marginEnd="8dp" />
+
+                <!-- Campo Litros de Combustible -->
+                <EditText
+                    android:id="@+id/etCantidadLitros"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Litros de Combustible"
+                    android:inputType="numberDecimal" />
+            </LinearLayout>
 
             <!-- Botón de Guardar -->
+            <Button
+                android:id="@+id/btnAgregarCombustible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@android:color/holo_green_dark"
+                android:text="Agregar Combustible"
+                android:textColor="#FFFFFF" />
+
             <Button
                 android:id="@+id/btnGuardar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Guardar"
-                android:textColor="#FFFFFF"
+                android:layout_marginBottom="16dp"
                 android:background="@android:color/holo_green_dark"
-                android:layout_marginBottom="16dp" />
+                android:text="Guardar Nuevo Surtidor"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

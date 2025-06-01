@@ -33,6 +33,8 @@ class AgregarSurtidorActivity : AppCompatActivity() {
     private lateinit var annotationManager: PointAnnotationManager
     private lateinit var etNombreSurtidor: EditText
     private lateinit var etCantidadBombas: EditText
+    private lateinit var etCantidadLitros: EditText
+
     private lateinit var spinnerTipoCombustible: Spinner
     private lateinit var btnGuardar: Button
     private lateinit var btnAgregarCombustible: Button
@@ -43,7 +45,9 @@ class AgregarSurtidorActivity : AppCompatActivity() {
     private lateinit var nStockCombustible: NStockCombustible
     private var puntoSeleccionado: Point? = null
 
-    private val combustiblesSeleccionados = mutableListOf<Pair<Int, Int>>() // Lista para almacenar tipos de combustible y número de bombas
+
+    private val combustiblesSeleccionados = mutableListOf<Triple<Int, Int, Double>>() // Para almacenar litros
+    //private val combustiblesSeleccionados = mutableListOf<Pair<Int, Int>>() // Lista para almacenar tipos de combustible y número de bombas
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +57,8 @@ class AgregarSurtidorActivity : AppCompatActivity() {
         mapView = findViewById(R.id.mapView)
         etNombreSurtidor = findViewById(R.id.etNombreSurtidor)
         etCantidadBombas = findViewById(R.id.etCantidadBombas)
+        etCantidadLitros = findViewById(R.id.etCantidadLitros)
+
         spinnerTipoCombustible = findViewById(R.id.spinnerTipoCombustible)
         btnGuardar = findViewById(R.id.btnGuardar)
         btnAgregarCombustible = findViewById(R.id.btnAgregarCombustible)
@@ -110,14 +116,23 @@ class AgregarSurtidorActivity : AppCompatActivity() {
     }
 
     // Agregar un tipo de combustible con su cantidad de bombas
+
+
     private fun agregarTipoCombustible() {
         val tipoCombustibleIndex = spinnerTipoCombustible.selectedItemPosition
         val cantidadBombasStr = etCantidadBombas.text.toString().trim()
+        val cantidadLitrosStr = etCantidadLitros.text.toString().trim() // Ya obtienes esta variable
 
         val cantidadBombas = cantidadBombasStr.toIntOrNull()
+        val cantidadLitros = cantidadLitrosStr.toDoubleOrNull() // Ya obtienes esta variable
 
         if (cantidadBombas == null || cantidadBombas <= 0) {
             Toast.makeText(this, "La cantidad de bombas debe ser un número válido", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (cantidadLitros == null || cantidadLitros <= 0) {
+            Toast.makeText(this, "La cantidad de litros debe ser un número válido", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -129,19 +144,23 @@ class AgregarSurtidorActivity : AppCompatActivity() {
         val tiposCombustible = nTipoCombustible.obtenerTodos()
         val idTipoCombustible = tiposCombustible[tipoCombustibleIndex].id
 
-        combustiblesSeleccionados.add(Pair(idTipoCombustible, cantidadBombas))
+        // Almacenar tipo, bombas y litros en la lista
+        combustiblesSeleccionados.add(Triple(idTipoCombustible, cantidadBombas, cantidadLitros)) // Modificado
 
-        // Agregar un nuevo layout con el tipo de combustible y la cantidad de bombas
+        // Agregar un nuevo layout con el tipo de combustible, cantidad de bombas y litros
         val itemView = layoutInflater.inflate(R.layout.item_agregar_tipo_combustible, null)
         val tvTipoCombustible = itemView.findViewById<TextView>(R.id.tvTipoCombustible)
         val tvCantidadBombas = itemView.findViewById<TextView>(R.id.tvCantidadBombas)
+        val tvCantidadLitros = itemView.findViewById<TextView>(R.id.tvCantidadLitros) // Asegúrate de que este ID existe en item_agregar_tipo_combustible.xml
 
         tvTipoCombustible.text = tiposCombustible[tipoCombustibleIndex].nombre
         tvCantidadBombas.text = "Cantidad de Bombas: $cantidadBombas"
+        tvCantidadLitros.text = "Cantidad de Litros: $cantidadLitros" // Mostrar la cantidad de litros ingresada
 
         layoutTipoCombustible.addView(itemView)
 
         etCantidadBombas.text.clear() // Limpiar campo de cantidad de bombas
+        etCantidadLitros.text.clear() // Limpiar campo de cantidad de litros
     }
 
     // Guardar el nuevo surtidor con los combustibles seleccionados
@@ -176,20 +195,25 @@ class AgregarSurtidorActivity : AppCompatActivity() {
                     val stockCombustible = StockCombustible(
                         id = 0,
                         idSurtidor = ultimoSurtidor.id,
-                        idTipoCombustible = combustible.first,
-                        cantidad = combustible.second.toDouble() * 100,
-                        nroBombas = combustible.second
+                        idTipoCombustible = combustible.first,    // ID del tipo de combustible
+                        cantidad = combustible.third,             // <--- ¡Usar la cantidad de litros!
+                        nroBombas = combustible.second            // Cantidad de bombas
                     )
 
                     if (!nStockCombustible.crear(stockCombustible)) {
                         Toast.makeText(this, "Error al guardar el stock de combustible", Toast.LENGTH_SHORT).show()
+                        // Considera manejar este error de forma más robusta (por ejemplo, eliminar el surtidor si falla el stock)
                         return
                     }
                 }
 
                 Toast.makeText(this, "Surtidor agregado correctamente", Toast.LENGTH_SHORT).show()
                 finish() // Cerrar actividad
+            } else {
+                Toast.makeText(this, "Error al obtener el último surtidor", Toast.LENGTH_SHORT).show()
             }
+        } else {
+            Toast.makeText(this, "Error al guardar el surtidor", Toast.LENGTH_SHORT).show()
         }
     }
 }

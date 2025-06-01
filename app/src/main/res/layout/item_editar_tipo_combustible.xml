@@ -1,31 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/item_editar_tipo_combustible.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/itemTipoCombustible"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="8dp"
-    android:layout_marginBottom="8dp">
+    android:layout_marginBottom="8dp"
+    android:background="@android:color/darker_gray"> <!-- O algún fondo para separarlos -->
 
-    <!-- TextView para mostrar el nombre del tipo de combustible -->
     <TextView
         android:id="@+id/tvTipoCombustible"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:text="Tipo de Combustible"
-        android:textSize="16sp"
-        android:layout_marginEnd="8dp"
-        android:padding="8dp" />
+        android:textStyle="bold"
+        android:textSize="16sp"/>
 
-    <!-- TextView para mostrar la cantidad de bombas -->
-    <TextView
-        android:id="@+id/tvCantidadBombas"
-        android:layout_width="0dp"
+    <EditText
+        android:id="@+id/etCantidadBombasExistente"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Cantidad de Bombas"
-        android:textSize="16sp"
-        android:layout_marginStart="8dp"
-        android:padding="8dp" />
+        android:hint="Cantidad de Bombas"
+        android:inputType="number"/>
+
+    <EditText
+        android:id="@+id/etCantidadLitrosExistente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Cantidad de Litros"
+        android:inputType="numberDecimal"/>
+
+    <Button
+        android:id="@+id/btnEliminarCombustible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Eliminar"
+        android:layout_gravity="end"
+        android:backgroundTint="@android:color/holo_red_dark"/>
+
 </LinearLayout>

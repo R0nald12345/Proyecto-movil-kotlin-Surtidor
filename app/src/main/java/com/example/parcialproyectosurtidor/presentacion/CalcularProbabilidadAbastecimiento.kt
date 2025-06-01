@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,12 @@ import com.mapbox.maps.Style
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.*
 import com.mapbox.maps.plugin.gestures.gestures
+import kotlinx.coroutines.*
+import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
 import kotlin.math.ceil
 
 class CalcularProbabilidadAbastecimientoActivity : AppCompatActivity() {
@@ -35,8 +42,13 @@ class CalcularProbabilidadAbastecimientoActivity : AppCompatActivity() {
     private lateinit var lineAnnotationManager: PolylineAnnotationManager
     private lateinit var pointAnnotationManager: PointAnnotationManager
     private var drawnPoints = mutableListOf<Point>()
+    private var routePoints = mutableListOf<Point>() // Para almacenar los puntos de la ruta
     private var surtidorSeleccionado: Surtidor? = null
     private var tiposCombustible = listOf<com.example.parcialproyectosurtidor.datos.entidades.TipoCombustible>()
+    private var rutaDistancia: Double = 0.0
+
+    // Token obtenido desde recursos
+    private lateinit var MAPBOX_ACCESS_TOKEN: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +63,9 @@ class CalcularProbabilidadAbastecimientoActivity : AppCompatActivity() {
         nTipo = NTipoCombustible(this)
         nStock = NStockCombustible(this)
 
+        // Obtener token desde recursos
+        MAPBOX_ACCESS_TOKEN = getString(R.string.mapbox_access_token)
+
         mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS) {
             val annotationApi = mapView.annotations
             lineAnnotationManager = annotationApi.createPolylineAnnotationManager()
@@ -60,10 +75,11 @@ class CalcularProbabilidadAbastecimientoActivity : AppCompatActivity() {
 
             mapView.gestures.addOnMapClickListener { point ->
                 if (surtidorSeleccionado != null) {
-                    drawnPoints.clear()
-                    drawnPoints.add(Point.fromLngLat(surtidorSeleccionado!!.longitud, surtidorSeleccionado!!.latitud))
-                    drawnPoints.add(point)
-                    drawLine()
+                    val origen = Point.fromLngLat(surtidorSeleccionado!!.longitud, surtidorSeleccionado!!.latitud)
+                    val destino = point
+
+                    // Obtener la ruta usando Mapbox Directions API
+                    obtenerRuta(origen, destino)
                 } else {
                     Toast.makeText(this, "Primero selecciona un surtidor", Toast.LENGTH_SHORT).show()
                 }
@@ -97,12 +113,9 @@ class CalcularProbabilidadAbastecimientoActivity : AppCompatActivity() {
                 .withTextField(surtidor.nombre)
 
             val annotation = pointAnnotationManager.create(annotationOptions)
-
-            // Guardamos el texto (nombre) como clave para luego identificar el surtidor seleccionado
             mapaSurtidores[surtidor.nombre] = surtidor
         }
 
-        // Listener global para todos los marcadores
         pointAnnotationManager.addClickListener { clickedAnnotation ->
             val nombre = clickedAnnotation.textField ?: return@addClickListener false
             val surtidor = mapaSurtidores[nombre]
@@ -116,7 +129,98 @@ class CalcularProbabilidadAbastecimientoActivity : AppCompatActivity() {
         }
     }
 
-    private fun calcularDistancia(puntos: List<Point>): Double {
+    private fun obtenerRuta(origen: Point, destino: Point) {
+        // Usar corrutinas para llamada de red
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val url = construirUrlDireciones(origen, destino)
+                val response = realizarLlamadaHTTP(url)
+                val rutaPuntos = parsearRespuestaRuta(response)
+
+                withContext(Dispatchers.Main) {
+                    if (rutaPuntos.isNotEmpty()) {
+                        routePoints = rutaPuntos.toMutableList()
+                        dibujarRuta(routePoints)
+                        rutaDistancia = calcularDistanciaRuta(routePoints)
+                        txtDistancia.text = "Total ${rutaDistancia.toInt()} mts"
+                    } else {
+                        Toast.makeText(this@CalcularProbabilidadAbastecimientoActivity,
+                            "No se pudo obtener la ruta", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("Routing", "Error obteniendo ruta: ${e.message}")
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@CalcularProbabilidadAbastecimientoActivity,
+                        "Error al obtener la ruta", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun construirUrlDireciones(origen: Point, destino: Point): String {
+        return "https://api.mapbox.com/directions/v5/mapbox/driving/" +
+                "${origen.longitude()},${origen.latitude()};" +
+                "${destino.longitude()},${destino.latitude()}" +
+                "?geometries=geojson&access_token=$MAPBOX_ACCESS_TOKEN"
+    }
+
+    private fun realizarLlamadaHTTP(urlString: String): String {
+        val url = URL(urlString)
+        val connection = url.openConnection() as HttpURLConnection
+        connection.requestMethod = "GET"
+        connection.connectTimeout = 10000
+        connection.readTimeout = 10000
+
+        val responseCode = connection.responseCode
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            val reader = BufferedReader(InputStreamReader(connection.inputStream))
+            val response = reader.readText()
+            reader.close()
+            return response
+        } else {
+            throw Exception("HTTP Error: $responseCode")
+        }
+    }
+
+    private fun parsearRespuestaRuta(jsonResponse: String): List<Point> {
+        try {
+            val jsonObject = JSONObject(jsonResponse)
+            val routes = jsonObject.getJSONArray("routes")
+
+            if (routes.length() > 0) {
+                val route = routes.getJSONObject(0)
+                val geometry = route.getJSONObject("geometry")
+                val coordinates = geometry.getJSONArray("coordinates")
+
+                val points = mutableListOf<Point>()
+                for (i in 0 until coordinates.length()) {
+                    val coord = coordinates.getJSONArray(i)
+                    val lng = coord.getDouble(0)
+                    val lat = coord.getDouble(1)
+                    points.add(Point.fromLngLat(lng, lat))
+                }
+                return points
+            }
+        } catch (e: Exception) {
+            Log.e("Parsing", "Error parseando respuesta: ${e.message}")
+        }
+        return emptyList()
+    }
+
+    private fun dibujarRuta(puntos: List<Point>) {
+        lineAnnotationManager.deleteAll()
+        if (puntos.size >= 2) {
+            lineAnnotationManager.create(
+                PolylineAnnotationOptions()
+                    .withPoints(puntos)
+                    .withLineColor("#FF0000")
+                    .withLineWidth(5.0)
+            )
+        }
+    }
+
+    private fun calcularDistanciaRuta(puntos: List<Point>): Double {
         if (puntos.size < 2) return 0.0
         var distanciaTotal = 0.0
         for (i in 0 until puntos.size - 1) {
@@ -131,27 +235,13 @@ class CalcularProbabilidadAbastecimientoActivity : AppCompatActivity() {
         return distanciaTotal
     }
 
-    private fun drawLine() {
-        lineAnnotationManager.deleteAll()
-        if (drawnPoints.size >= 2) {
-            lineAnnotationManager.create(
-                PolylineAnnotationOptions()
-                    .withPoints(drawnPoints)
-                    .withLineColor("#FF0000")
-                    .withLineWidth(5.0)
-            )
-            val distancia = calcularDistancia(drawnPoints)
-            txtDistancia.text = "Total ${distancia.toInt()} mts"
-        }
-    }
-
     private fun realizarCalculo() {
-        if (drawnPoints.size < 2 || surtidorSeleccionado == null) {
+        if (routePoints.size < 2 || surtidorSeleccionado == null) {
             Toast.makeText(this, "Dibuja la distancia desde un surtidor seleccionado", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val distancia = calcularDistancia(drawnPoints)
+        val distancia = rutaDistancia
         val cantidadAutos = (distancia / 5.0).toInt()
 
         val tipoSeleccionado = tiposCombustible[spinnerTipo.selectedItemPosition]

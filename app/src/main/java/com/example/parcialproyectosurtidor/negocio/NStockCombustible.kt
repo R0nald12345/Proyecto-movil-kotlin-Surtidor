@@ -34,4 +34,16 @@ class NStockCombustible(context: Context) {
         }
         return false
     }
+
+    // Nuevo método para eliminar un stock por su ID (llamando al DAO)
+    fun eliminar(idStock: Int): Boolean {
+        return dao.eliminar(idStock)
+    }
+
+    // Nuevo método para editar un stock existente (llamando al DAO)
+    fun editar(stock: StockCombustible): Boolean {
+        return dao.editar(stock)
+    }
+
+
 }
