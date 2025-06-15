@@ -1,42 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".presentacion.CalcularProbabilidadAbastecimientoActivity">
 
-    <com.mapbox.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        mapbox:mapbox_cameraTargetLat="-17.7832"
-        mapbox:mapbox_cameraTargetLng="-63.1821"
-        mapbox:mapbox_cameraZoom="12" />
+<com.mapbox.maps.MapView
+android:id="@+id/mapView"
+android:layout_width="match_parent"
+android:layout_height="0dp"
+android:layout_weight="1"
+mapbox:mapbox_cameraTargetLat="-17.7832"
+mapbox:mapbox_cameraTargetLng="-63.1821"
+mapbox:mapbox_cameraZoom="12" />
 
-    <TextView
-        android:id="@+id/txtDistancia"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Total: 0 mts"
-        android:padding="8dp"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        android:background="#EEEEEE" />
+<TextView
+android:id="@+id/txtDistancia"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:background="#EEEEEE"
+android:padding="8dp"
+android:text="Distancia de ruta: (selecciona surtidor y destino)"
+android:textAlignment="center"
+android:textSize="16sp" />
 
-    <Spinner
-        android:id="@+id/spinnerTipoCombustible"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp" />
+<Spinner
+android:id="@+id/spinnerTipoCombustible"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_margin="8dp" />
 
-    <Button
-        android:id="@+id/btnCalcular"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Calcular"
-        android:layout_margin="8dp"
-        android:backgroundTint="#FF0000"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"/>
-</LinearLayout>
+<Button
+android:id="@+id/btnCalcular"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginStart="8dp"
+android:layout_marginTop="8dp"
+android:layout_marginEnd="8dp"
+android:layout_marginBottom="4dp"
+    android:backgroundTint="#FF0000"
+    android:text="Calcular Conveniencia"
+    android:textColor="#FFFFFF"
+    android:textSize="18sp" />
+
+
+<TextView
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:text="Selecciona Estrategia de Cálculo:"
+android:textSize="14sp"
+android:textStyle="bold"
+android:layout_marginStart="8dp"
+android:layout_marginEnd="8dp"
+android:layout_marginTop="8dp"/>
+
+<RadioGroup
+android:id="@+id/radioGroupEstrategias"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:gravity="center_horizontal"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="8dp">
+
+<RadioButton
+android:id="@+id/rbTiempoEspera"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:layout_weight="1"
+android:text="Tiempo"
+android:checked="true" />
+
+<RadioButton
+android:id="@+id/rbDistanciaSimple"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:layout_weight="1"
+android:text="Distancia" />
+
+<RadioButton
+android:id="@+id/rbIndiceConveniencia"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:layout_weight="1"
+android:text="Índice" />
+    </RadioGroup>
+
+    </LinearLayout>
