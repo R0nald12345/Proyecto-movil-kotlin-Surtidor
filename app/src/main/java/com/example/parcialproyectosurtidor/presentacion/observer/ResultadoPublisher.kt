@@ -20,14 +20,5 @@ class ResultadoPublisher {
         observers.forEach { it.update(mensajeResultado) }
     }
 
-    fun calcularResultado(
-        estrategia: CalculoProbabilidadStrategy,
-        surtidor: Surtidor,
-        stock: StockCombustible?,
-        distancia: Double,
-        tipoCombustible: String
-    ) {
-        mensajeResultado = estrategia.calcular(surtidor, stock, distancia, tipoCombustible)
-        notifyObservers()
-    }
+
 }

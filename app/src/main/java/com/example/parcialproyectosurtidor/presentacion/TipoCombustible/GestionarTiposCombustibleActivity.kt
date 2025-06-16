@@ -20,10 +20,10 @@ import com.example.parcialproyectosurtidor.presentacion.observer.ResultadoObserv
 import com.example.parcialproyectosurtidor.presentacion.observer.ResultadoPublisher
 
 class GestionarTiposCombustibleActivity : AppCompatActivity(), ResultadoObserver {
-
     private lateinit var nTipoCombustible: NTipoCombustible
     private lateinit var linearLayout: LinearLayout
     private lateinit var publisher: ResultadoPublisher // ⬅️ Publisher Observer
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,21 +51,18 @@ class GestionarTiposCombustibleActivity : AppCompatActivity(), ResultadoObserver
                 text = tipoCombustible.nombre
                 textSize = 18f
             }
-
             val editarButton = Button(this).apply {
                 text = "Editar"
                 setOnClickListener {
                     mostrarDialogoEditar(tipoCombustible)
                 }
             }
-
             val eliminarButton = Button(this).apply {
                 text = "Eliminar"
                 setOnClickListener {
                     mostrarDialogoEliminar(tipoCombustible)
                 }
             }
-
             linearLayout.addView(nombreTextView)
             linearLayout.addView(editarButton)
             linearLayout.addView(eliminarButton)
@@ -90,7 +87,6 @@ class GestionarTiposCombustibleActivity : AppCompatActivity(), ResultadoObserver
                 Toast.makeText(this, "El nombre no puede estar vacío", Toast.LENGTH_SHORT).show()
             }
         }
-
         builder.setNegativeButton("Cancelar") { dialog, _ -> dialog.dismiss() }
         builder.show()
     }

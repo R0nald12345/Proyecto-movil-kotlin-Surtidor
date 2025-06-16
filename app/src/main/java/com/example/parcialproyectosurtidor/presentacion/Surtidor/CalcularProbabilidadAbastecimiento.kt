@@ -88,7 +88,7 @@ class CalcularProbabilidadAbastecimientoActivity : AppCompatActivity() {
         // Ejecutar cálculo con estrategia seleccionada
         btnCalcular.setOnClickListener { realizarCalculoConEstrategia() }
     }
-
+   ///
     private fun setupMap() {
         mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS) {
             val annotationApi = mapView.annotations
@@ -109,7 +109,7 @@ class CalcularProbabilidadAbastecimientoActivity : AppCompatActivity() {
             }
         }
     }
-
+    //
     private fun realizarCalculoConEstrategia() {
         if (surtidorSeleccionado == null || routePoints.size < 2) {
             Toast.makeText(this, "Selecciona un surtidor y una ruta", Toast.LENGTH_LONG).show()
@@ -120,6 +120,8 @@ class CalcularProbabilidadAbastecimientoActivity : AppCompatActivity() {
         val stock = nStock.obtenerPorSurtidor(surtidorSeleccionado!!.id)
             .firstOrNull { it.idTipoCombustible == tipoSeleccionado.id }
 
+
+        //Aqui ingreso datos...!! para el patron estrategy
         val resultado = contextoEstrategia.calcular(
             surtidor = surtidorSeleccionado!!,
             stock = stock,
@@ -129,7 +131,7 @@ class CalcularProbabilidadAbastecimientoActivity : AppCompatActivity() {
 
         mostrarResultado(resultado)
     }
-
+    //
     private fun mostrarResultado(mensaje: String) {
         AlertDialog.Builder(this)
             .setTitle("Resultado del Cálculo")
