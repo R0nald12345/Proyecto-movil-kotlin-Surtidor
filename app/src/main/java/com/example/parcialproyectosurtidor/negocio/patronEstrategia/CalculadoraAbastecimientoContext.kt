@@ -4,6 +4,7 @@ import com.example.parcialproyectosurtidor.datos.entidades.StockCombustible
 import com.example.parcialproyectosurtidor.datos.entidades.Surtidor
 
 class CalculadoraAbastecimientoContext {
+
     private var strategy: CalculoProbabilidadStrategy = CalculoSimpleDistanciaStrategy()
 
     fun setStrategy(strategy: CalculoProbabilidadStrategy) {

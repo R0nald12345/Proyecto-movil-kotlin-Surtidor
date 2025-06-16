@@ -8,6 +8,7 @@ import com.example.parcialproyectosurtidor.datos.entidades.Surtidor
  * y si hay stock del combustible deseado.
  */
 class CalculoSimpleDistanciaStrategy : CalculoProbabilidadStrategy {
+
     // Definimos umbrales de distancia para categorizar
     companion object {
         const val DISTANCIA_CERCANA_MTS = 1000 // Menos de 1 km es cercano
